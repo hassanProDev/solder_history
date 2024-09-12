@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "542865630319",
+    "project_id": "history-ad477",
+    "storage_bucket": "history-ad477.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:542865630319:android:cf667174db8bb4e3bf999a",
+        "android_client_info": {
+          "package_name": "com.example.solder_history"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC5AfeuiT38lP-onjXOD4yFp_AfDbTl5TA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
