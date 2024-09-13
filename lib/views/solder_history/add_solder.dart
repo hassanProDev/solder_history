@@ -119,9 +119,9 @@ class AddSolder extends StatelessWidget {
                                           showDatePicker(
                                             context: context,
                                             initialDate: DateTime.now(),
-                                            firstDate: DateTime.now(),
+                                            firstDate: DateTime(1940),
                                             lastDate: DateTime.now().add(
-                                              const Duration(days: 365),
+                                              const Duration(days: 3*365),
                                             ),
                                           ).then((value) {
                                             if (value == null) return;
@@ -202,9 +202,9 @@ class AddSolder extends StatelessWidget {
                                           showDatePicker(
                                             context: context,
                                             initialDate: DateTime.now(),
-                                            firstDate: DateTime.now(),
+                                            firstDate: DateTime(1940),
                                             lastDate: DateTime.now().add(
-                                              const Duration(days: 365),
+                                              const Duration(days: 3*365),
                                             ),
                                           ).then((value) {
                                             if (value == null) return;
@@ -258,9 +258,9 @@ class AddSolder extends StatelessWidget {
                                     showDatePicker(
                                       context: context,
                                       initialDate: DateTime.now(),
-                                      firstDate: DateTime.now(),
+                                      firstDate: DateTime(1940),
                                       lastDate: DateTime.now().add(
-                                        const Duration(days: 365),
+                                        const Duration(days: 3*365),
                                       ),
                                     ).then((value) {
                                       if (value == null) return;
