@@ -50,3 +50,6 @@ class RefreshDataCompressionFailed extends DataCompressionState {}
 class RefreshDataCompressionLoading extends DataCompressionState {}
 
 class SearchDataCompression extends DataCompressionState {}
+class GetAccess extends DataCompressionState {}
+
+

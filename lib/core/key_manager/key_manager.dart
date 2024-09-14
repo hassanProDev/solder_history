@@ -1,5 +1,8 @@
 class KeyManager {
   static const String id="idKey";
+  static const String thisDevice="thisDeviceKey";
+  static const String isSent="isSentKey";
+  static const String sentDate="sentDateKey";
   static const String listOfSolders="listOfSoldersKey";
   static const String listDeviceAccess="listDeviceAccessKey";
   static const String access="accessKey";

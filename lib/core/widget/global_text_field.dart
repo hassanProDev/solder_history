@@ -42,7 +42,7 @@ class GlobalTextFormField extends StatelessWidget {
         autofocus: autofocus,
         focusNode: focusNode,
         onFieldSubmitted: onFieldSubmitted,
-        // textInputAction: textInputAction,
+        textInputAction: textInputAction,
         onChanged: onChange,
         validator: validator ??
             (value){

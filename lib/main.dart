@@ -16,6 +16,8 @@ import 'package:solder_history/data/manager/data_compression_manager.dart';
 import 'package:solder_history/data/manager/firebase_comp_manager.dart';
 import 'package:solder_history/data/model/data_compression_model.dart';
 import 'package:solder_history/data/model/device_auth_model.dart';
+import 'package:solder_history/data/model/solder_model.dart';
+import 'package:solder_history/helper/helper_method.dart';
 import 'package:solder_history/route_manager.dart';
 import 'package:solder_history/views/solder_history/add_solder.dart';
 import 'package:solder_history/views/solder_history/solder_list.dart';
@@ -27,40 +29,12 @@ void main() async {
   await Firebase.initializeApp();
   await Hive.initFlutter();
   await Hive.openBox("DataCompression");
-  var box = await Hive.openBox("device");
-  box.delete("auth");
-  // box.put("auth", {
-  //   'UE1A.230829.036.A1': true,
-  //   'TP1A.220624.014': true,
-  // });
-  // bool isAuth = await DeviceAuthModel.fromJson(box.get("auth", defaultValue: {
-  //   KeyManager.change: "false",
-  //   KeyManager.listDeviceAccess: "[]"
-  // })).listDeviceAccess.firstWhere((e)=>e.id==true);
-  // final repo = InFirebaseData();
-  final repo = InHiveData();
-  DataCompressionManager manager = DataCompressionManager(repo);
-  // print(Hive.box("DataCompression").get("mainData"));
-// manager.deleteData();
-  // FirebaseCompManager firebaseCompManager=FirebaseCompManager(repo);
-  // firebaseCompManager.updateData();
-  // InFirebaseAccess().updateAccess();
-  // if(getDataNull()==null){
-  //
-  // }
-  print(box.get("auth"));
-  // InFirebaseAccess().updateAccess();
-  if (true/*await InFirebaseAccess().deviceAccess()*/) {
-    runApp(MyApp());
-  } else {
-    runApp(const MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: Text("your device didn't has access"),
-        ),
-      ),
-    ));
-  }
+  await Hive.openBox("device");
+  // deviceBox.delete("auth");
+  getDeviceId();
+  InFirebaseAccess().updateDevice();
+  print(getAuthDevice());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -68,7 +42,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider<DataCompressionCubit>(create:(_)=> DataCompressionCubit()..getDataComp())
+        BlocProvider<DataCompressionCubit>(
+            create: (_) => DataCompressionCubit()..getDataComp())
       ],
       child: SafeArea(
         child: MaterialApp(

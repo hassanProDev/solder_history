@@ -1,12 +1,20 @@
+import 'dart:convert';
+
 import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:meta/meta.dart';
+import 'package:solder_history/core/hive_helper.dart';
+import 'package:solder_history/core/key_manager/key_manager.dart';
 import 'package:solder_history/data/firebase/in_firebase_data.dart';
 import 'package:solder_history/data/local/in_hive_data.dart';
 import 'package:solder_history/data/manager/data_compression_manager.dart';
 import 'package:solder_history/data/manager/firebase_comp_manager.dart';
 import 'package:solder_history/data/model/data_compression_model.dart';
+import 'package:solder_history/data/model/device_access_model.dart';
+import 'package:solder_history/data/model/device_auth_model.dart';
 import 'package:solder_history/data/model/solder_model.dart';
+
+import '../helper/helper_method.dart';
 
 part 'data_compression_state.dart';
 
@@ -33,8 +41,31 @@ class DataCompressionCubit extends Cubit<DataCompressionState> {
     }
   }
 
-  DataCompressionModel solderData=DataCompressionModel();
-  void fetchSolder(DataCompressionModel data) {
+  DataCompressionModel soldersData=DataCompressionModel();
+  void fetchSolders(DataCompressionModel data) {
+    emit(FetchDataCompressionLoading());
+    try {
+      soldersData=data;
+      emit(FetchDataCompressionSuccess());
+    } catch (e) {
+      emit(FetchDataCompressionFailed());
+    }
+  }
+
+  DataCompressionModel specialSoldersData = DataCompressionModel();
+
+  void fetchSpecialSolders(DataCompressionModel data) {
+    emit(FetchDataCompressionLoading());
+    try {
+      specialSoldersData = data;
+      emit(FetchDataCompressionSuccess());
+    } catch (e) {
+      emit(FetchDataCompressionFailed());
+    }
+  }
+
+  Extra solderData=Extra();
+  void fetchSolder(SolderModel data) {
     emit(FetchDataCompressionLoading());
     try {
       solderData=data;
@@ -89,7 +120,12 @@ class DataCompressionCubit extends Cubit<DataCompressionState> {
     emit(SearchDataCompression());
   }
 
+  bool access=false;
   void deviceAccess(){
-
+    DeviceAuthModel? deviceAuthModel;
+    deviceAuthModel=DeviceAuthModel.fromJson(getAuthDevice());
+    if(deviceAuthModel.listDeviceAccess.isEmpty)return;
+    access=deviceAuthModel.listDeviceAccess.firstWhere((e)=>e.id==androidId).access??false;
+    emit(GetAccess());
   }
 }

@@ -1,8 +1,7 @@
 import 'package:solder_history/data/model/military_violation_model.dart';
 
 class Solder {
-  static int id=0;
-  late String? sId;
+
   String name;
   String forces;
   String militaryId;
@@ -28,7 +27,6 @@ class Solder {
   List<MilitaryViolationModel>? listMilitaryViolation;
 
   Solder({
-    this.sId,
     required this.name,
     required this.forces,
     required this.militaryId,
@@ -52,14 +50,11 @@ class Solder {
     this.lostDuration,
     this.netServiceDuration,
     this.listMilitaryViolation,
-  }){
-   id++;
-   sId=id.toString();
-  }
+  });
 
   @override
   String toString() {
-    return "Solder(solder id: $sId , name: $name, militaryId: $militaryId, enlistmentDate: $enlistmentDate, center: $center, governorate: $governorate, address: $address, idNumber: $idNumber, weapon: $weapon, tripleNumber: $tripleNumber, dateOfBirth: $dateOfBirth, educationalLevel: $educationalLevel, recruitmentArea: $recruitmentArea, serviceEndDate: $serviceEndDate,listMilitaryViolation:$listMilitaryViolation, forces: $forces)";
+    return "Solder(name: $name, militaryId: $militaryId, enlistmentDate: $enlistmentDate, center: $center, governorate: $governorate, address: $address, idNumber: $idNumber, weapon: $weapon, tripleNumber: $tripleNumber, dateOfBirth: $dateOfBirth, educationalLevel: $educationalLevel, recruitmentArea: $recruitmentArea, serviceEndDate: $serviceEndDate,listMilitaryViolation:$listMilitaryViolation, forces: $forces)";
   }
 }
 

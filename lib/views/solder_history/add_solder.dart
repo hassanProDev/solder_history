@@ -38,6 +38,31 @@ class AddSolder extends StatelessWidget {
                       SizedBox(
                         height: 12,
                       ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width * .45,
+                            child: GlobalTextFormField(
+                              controller: solderDetails.recruitmentArea,
+                              textInputAction: TextInputAction.next,
+                              keyboardType: TextInputType.text,
+                              text: "منطقة التجنيد",
+                            ),
+                          ),
+                          SizedBox(
+                              width: MediaQuery.of(context).size.width * .45,
+                              child: GlobalTextFormField(
+                                controller: solderDetails.forces,
+                                keyboardType: TextInputType.text,
+                                textInputAction: TextInputAction.next,
+                                text: "القوات",
+                              ))
+                        ],
+                      ),
+                      SizedBox(
+                        height: 12,
+                      ),
                       Form(
                         key: solderDetails.formKey,
                         child: Column(
@@ -46,31 +71,8 @@ class AddSolder extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 SizedBox(
-                                  width: MediaQuery.of(context).size.width * .45,
-                                  child: GlobalTextFormField(
-                                    controller: solderDetails.recruitmentArea,
-                                    textInputAction: TextInputAction.next,
-                                    keyboardType: TextInputType.text,
-                                    text: "منطقة التجنيد",
-                                  ),
-                                ),
-                                SizedBox(
-                                    width: MediaQuery.of(context).size.width * .45,
-                                    child: GlobalTextFormField(
-                                      controller: solderDetails.forces,
-                                      keyboardType: TextInputType.text,
-                                      textInputAction: TextInputAction.next,
-                                      text: "القوات",
-                                    ))
-                              ],
-                            ),SizedBox(
-                              height: 12,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                SizedBox(
-                                  width: MediaQuery.of(context).size.width * .45,
+                                  width:
+                                      MediaQuery.of(context).size.width * .45,
                                   child: GlobalTextFormField(
                                     controller: solderDetails.militaryId,
                                     textInputAction: TextInputAction.next,
@@ -79,13 +81,15 @@ class AddSolder extends StatelessWidget {
                                   ),
                                 ),
                                 SizedBox(
-                                    width: MediaQuery.of(context).size.width * .45,
-                                    child: GlobalTextFormField(
-                                      controller: solderDetails.tripleNumber,
-                                      keyboardType: TextInputType.number,
-                                      textInputAction: TextInputAction.next,
-                                      text: "الرقم الثلاثي",
-                                    ))
+                                  width:
+                                      MediaQuery.of(context).size.width * .45,
+                                  child: GlobalTextFormField(
+                                    keyboardType: TextInputType.text,
+                                    controller: solderDetails.center,
+                                    textInputAction: TextInputAction.next,
+                                    text: "القسم/المركز",
+                                  ),
+                                )
                               ],
                             ),
                             SizedBox(
@@ -104,7 +108,8 @@ class AddSolder extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 SizedBox(
-                                  width: MediaQuery.of(context).size.width * .45,
+                                  width:
+                                      MediaQuery.of(context).size.width * .45,
                                   child: Column(
                                     children: [
                                       GlobalTextFormField(
@@ -121,7 +126,7 @@ class AddSolder extends StatelessWidget {
                                             initialDate: DateTime.now(),
                                             firstDate: DateTime(1940),
                                             lastDate: DateTime.now().add(
-                                              const Duration(days: 3*365),
+                                              const Duration(days: 3 * 365),
                                             ),
                                           ).then((value) {
                                             if (value == null) return;
@@ -137,62 +142,14 @@ class AddSolder extends StatelessWidget {
                                   ),
                                 ),
                                 SizedBox(
-                                  width: MediaQuery.of(context).size.width * .45,
-                                  child: GlobalTextFormField(
-                                    keyboardType: TextInputType.text,
-                                    controller: solderDetails.center,
-                                    textInputAction: TextInputAction.next,
-                                    text: "القسم/المركز",
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(
-                              height: 12,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                SizedBox(
-                                  width: MediaQuery.of(context).size.width * .45,
-                                  child: GlobalTextFormField(
-                                    keyboardType: TextInputType.text,
-                                    controller: solderDetails.governorate,
-                                    textInputAction: TextInputAction.next,
-                                    text: "المحافظة",
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: MediaQuery.of(context).size.width * .45,
-                                  child: GlobalTextFormField(
-                                    controller: solderDetails.idNumber,
-                                    keyboardType: TextInputType.number,
-                                    textInputAction: TextInputAction.next,
-                                    text: "الرقم القومي",
-                                  ),
-                                ),
-                              ],
-                            ),SizedBox(
-                              height: 12,
-                            ),
-                            GlobalTextFormField(
-                              controller: solderDetails.address,
-                              keyboardType: TextInputType.text,
-                              text: "العنوان",
-                              textInputAction: TextInputAction.next,
-                            ),SizedBox(
-                              height: 12,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                SizedBox(
-                                  width: MediaQuery.of(context).size.width * .45,
+                                  width:
+                                      MediaQuery.of(context).size.width * .45,
                                   child: Column(
                                     children: [
                                       GlobalTextFormField(
                                         keyboardType: TextInputType.text,
-                                        controller: solderDetails.enlistmentDate,
+                                        controller:
+                                            solderDetails.enlistmentDate,
                                         textInputAction: TextInputAction.next,
                                         text: "تاريخ التجنيد",
                                         enabled: false,
@@ -204,7 +161,7 @@ class AddSolder extends StatelessWidget {
                                             initialDate: DateTime.now(),
                                             firstDate: DateTime(1940),
                                             lastDate: DateTime.now().add(
-                                              const Duration(days: 3*365),
+                                              const Duration(days: 3 * 365),
                                             ),
                                           ).then((value) {
                                             if (value == null) return;
@@ -219,21 +176,73 @@ class AddSolder extends StatelessWidget {
                                     ],
                                   ),
                                 ),
+                              ],
+                            ),
+                            SizedBox(
+                              height: 12,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
                                 SizedBox(
-                                  width: MediaQuery.of(context).size.width * .45,
+                                  width:
+                                      MediaQuery.of(context).size.width * .45,
                                   child: GlobalTextFormField(
-                                    controller: solderDetails.weapon,
-                                    keyboardType: TextInputType.text,
+                                    controller: solderDetails.idNumber,
+                                    keyboardType: TextInputType.number,
                                     textInputAction: TextInputAction.next,
-                                    text: "السلاح",
+                                    text: "الرقم القومي",
                                   ),
                                 ),
+                                SizedBox(
+                                  width:
+                                      MediaQuery.of(context).size.width * .45,
+                                  child: GlobalTextFormField(
+                                    keyboardType: TextInputType.text,
+                                    controller: solderDetails.educationalLevel,
+                                    textInputAction: TextInputAction.next,
+                                    text: "المستوى الثقافي",
+                                  ),
+                                )
                               ],
+                            ),
+                            SizedBox(
+                              height: 12,
+                            ),
+                            GlobalTextFormField(
+                              controller: solderDetails.address,
+                              keyboardType: TextInputType.text,
+                              text: "العنوان",
+                              textInputAction: TextInputAction.next,
+                            ),
+                            SizedBox(
+                              height: 12,
                             ),
                           ],
                         ),
                       ),
-            
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width * .45,
+                            child: GlobalTextFormField(
+                              keyboardType: TextInputType.text,
+                              controller: solderDetails.governorate,
+                              textInputAction: TextInputAction.next,
+                              text: "المحافظة",
+                            ),
+                          ),
+                          SizedBox(
+                              width: MediaQuery.of(context).size.width * .45,
+                              child: GlobalTextFormField(
+                                controller: solderDetails.tripleNumber,
+                                keyboardType: TextInputType.number,
+                                textInputAction: TextInputAction.next,
+                                text: "الرقم الثلاثي",
+                              )),
+                        ],
+                      ),
                       SizedBox(
                         height: 12,
                       ),
@@ -260,7 +269,7 @@ class AddSolder extends StatelessWidget {
                                       initialDate: DateTime.now(),
                                       firstDate: DateTime(1940),
                                       lastDate: DateTime.now().add(
-                                        const Duration(days: 3*365),
+                                        const Duration(days: 3 * 365),
                                       ),
                                     ).then((value) {
                                       if (value == null) return;
@@ -286,7 +295,6 @@ class AddSolder extends StatelessWidget {
                           ),
                         ],
                       ),
-            
                       SizedBox(
                         height: 12,
                       ),
@@ -305,12 +313,12 @@ class AddSolder extends StatelessWidget {
                           SizedBox(
                             width: MediaQuery.of(context).size.width * .45,
                             child: GlobalTextFormField(
+                              controller: solderDetails.weapon,
                               keyboardType: TextInputType.text,
-                              controller: solderDetails.educationalLevel,
                               textInputAction: TextInputAction.next,
-                              text: "المستوى الثقافي",
+                              text: "السلاح",
                             ),
-                          ),
+                          )
                         ],
                       ),
                       SizedBox(
@@ -347,16 +355,18 @@ class AddSolder extends StatelessWidget {
           ),
           floatingActionButtonLocation:
               FloatingActionButtonLocation.centerFloat,
-          floatingActionButton:state is AddDataCompressionLoading?SizedBox(): FilledButton(
-              style: FilledButton.styleFrom(backgroundColor: Colors.indigo),
-              onPressed: () {
-                if (solderDetails.formKey.currentState!.validate()) {
-                  BlocProvider.of<DataCompressionCubit>(context)
-                      .addData(solderDetails.solderModel());
-                  Navigator.pop(context);
-                }
-              },
-              child: Text("اضافة")),
+          floatingActionButton: state is AddDataCompressionLoading
+              ? SizedBox()
+              : FilledButton(
+                  style: FilledButton.styleFrom(backgroundColor: Colors.indigo),
+                  onPressed: () {
+                    if (solderDetails.formKey.currentState!.validate()) {
+                      BlocProvider.of<DataCompressionCubit>(context)
+                          .addData(solderDetails.solderModel());
+                      Navigator.pop(context);
+                    }
+                  },
+                  child: Text("اضافة")),
         );
       },
     );

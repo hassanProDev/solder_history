@@ -36,7 +36,8 @@ class SolderScreen extends StatelessWidget {
     //   listMilitaryViolation: [],
     //   netServiceDuration: DateTime(2002),
     // );
-    final myCubit= BlocProvider.of<DataCompressionCubit>(context);
+    final myCubit = BlocProvider.of<DataCompressionCubit>(context);
+    SolderModel solderModel = myCubit.solderData as SolderModel;
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -64,19 +65,21 @@ class SolderScreen extends StatelessWidget {
                   Column(
                     children: [
                       Text(
-                        "سن المجند :${calculateAge(myCubit.solderData.listOfSolders![0].dateOfBirth)}",
+                        "سن المجند :${calculateAge(solderModel.dateOfBirth)}",
                         style: TextStyle(
                           fontSize: 18,
                         ),
                       ),
                       Text(
-                        "سن دخول الخدمة :${calculateSpecificAge(birthDate: myCubit.solderData.listOfSolders![0].dateOfBirth, specificDate: myCubit.solderData.listOfSolders![0].enlistmentDate)}",
+                        "سن دخول الخدمة :${calculateSpecificAge(birthDate: solderModel.dateOfBirth, specificDate: solderModel.enlistmentDate)}",
                         style: TextStyle(fontSize: 18),
                       ),
                       Text(
-                        "سن افتراض خروجه :${calculateSpecificAge(birthDate: myCubit.solderData.listOfSolders![0].dateOfBirth, specificDate: myCubit.solderData.listOfSolders![0].serviceEndDate)}",
+                        solderModel.isSent
+                            ? "تم تسليم السجل بتاريخ ${solderModel.sentDate!.year}-${solderModel.sentDate!.month}-${solderModel.sentDate!.day}"
+                            : "لم يتم تسليم السجل بعد",
                         style: TextStyle(fontSize: 18),
-                      )
+                      ),
                     ],
                   ),
                   SizedBox(
@@ -84,26 +87,25 @@ class SolderScreen extends StatelessWidget {
                   ),
                   SolderContentWidget(
                     title1: "منطقة التجنيد: ",
-                    content1:
-                    myCubit.solderData.listOfSolders![0].recruitmentArea,
+                    content1: solderModel.recruitmentArea,
                     title2: "القوات: ",
-                    content2: myCubit.solderData.listOfSolders![0].forces,
+                    content2: solderModel.forces,
                   ),
                   SizedBox(
                     height: 12,
                   ),
                   SolderContentWidget(
                     title1: "الرقم العسكري: ",
-                    content1: myCubit.solderData.listOfSolders![0].militaryId,
+                    content1: solderModel.militaryId,
                     title2: "الرقم الثلاثي: ",
-                    content2: myCubit.solderData.listOfSolders![0].tripleNumber,
+                    content2: solderModel.tripleNumber,
                   ),
                   SizedBox(
                     height: 12,
                   ),
                   SolderContentWidget(
                     title1: "الاسم: ",
-                    content1: myCubit.solderData.listOfSolders![0].name,
+                    content1: solderModel.name,
                   ),
                   SizedBox(
                     height: 12,
@@ -111,18 +113,18 @@ class SolderScreen extends StatelessWidget {
                   SolderContentWidget(
                     title1: "تاريخ الميلاد: ",
                     content1:
-                    "${myCubit.solderData.listOfSolders![0].dateOfBirth.year} - ${myCubit.solderData.listOfSolders![0].dateOfBirth.month} - ${myCubit.solderData.listOfSolders![0].dateOfBirth.day}",
+                        "${solderModel.dateOfBirth.year} - ${solderModel.dateOfBirth.month} - ${solderModel.dateOfBirth.day}",
                     title2: "القسم: ",
-                    content2: myCubit.solderData.listOfSolders![0].center,
+                    content2: solderModel.center,
                   ),
                   SizedBox(
                     height: 12,
                   ),
                   SolderContentWidget(
                     title1: "المحافظة: ",
-                    content1: myCubit.solderData.listOfSolders![0].governorate,
+                    content1: solderModel.governorate,
                     title2: "الرقم القومي: ",
-                    content2: myCubit.solderData.listOfSolders![0].idNumber,
+                    content2: solderModel.idNumber,
                   ),
                   SizedBox(
                     height: 12,
@@ -130,9 +132,9 @@ class SolderScreen extends StatelessWidget {
                   SolderContentWidget(
                     title1: "تاريخ الالتحاق بالخدمة: ",
                     content1:
-                    "${myCubit.solderData.listOfSolders![0].enlistmentDate.year} - ${myCubit.solderData.listOfSolders![0].enlistmentDate.month} - ${myCubit.solderData.listOfSolders![0].enlistmentDate.day}",
+                        "${solderModel.enlistmentDate.year} - ${solderModel.enlistmentDate.month} - ${solderModel.enlistmentDate.day}",
                     title2: "السلاح: ",
-                    content2: myCubit.solderData.listOfSolders![0].weapon,
+                    content2: solderModel.weapon,
                   ),
                   SizedBox(
                     height: 12,
@@ -140,35 +142,34 @@ class SolderScreen extends StatelessWidget {
                   SolderContentWidget(
                     title1: "تاريخ انتهاء الخدمة: ",
                     content1:
-                    "${myCubit.solderData.listOfSolders![0].serviceEndDate.year} - ${myCubit.solderData.listOfSolders![0].serviceEndDate.month} - ${myCubit.solderData.listOfSolders![0].serviceEndDate.day}",
+                        "${solderModel.serviceEndDate.year} - ${solderModel.serviceEndDate.month} - ${solderModel.serviceEndDate.day}",
                     title2: "الهاتف: ",
-                    content2: myCubit.solderData.listOfSolders![0].phoneNumber,
+                    content2: solderModel.phoneNumber,
                   ),
                   SizedBox(
                     height: 12,
                   ),
                   SolderContentWidget(
                     title1: "العنوان: ",
-                    content1: myCubit.solderData.listOfSolders![0].address,
+                    content1: solderModel.address,
                   ),
                   SizedBox(
                     height: 12,
                   ),
                   SolderContentWidget(
                     title1: "المستوى الطبي: ",
-                    content1: myCubit.solderData.listOfSolders![0].medicalLevel,
+                    content1: solderModel.medicalLevel,
                     title2: "المستوى الثقافي: ",
-                    content2:
-                    myCubit.solderData.listOfSolders![0].educationalLevel,
+                    content2: solderModel.educationalLevel,
                   ),
                   SizedBox(
                     height: 12,
                   ),
                   SolderContentWidget(
                     title1: "الديانة: ",
-                    content1: myCubit.solderData.listOfSolders![0].religion,
+                    content1: solderModel.religion,
                     title2: "فصيلة الدم: ",
-                    content2: myCubit.solderData.listOfSolders![0].bloodType,
+                    content2: solderModel.bloodType,
                   ),
                 ],
               ),

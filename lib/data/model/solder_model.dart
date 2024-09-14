@@ -3,10 +3,13 @@ import 'dart:convert';
 import 'package:solder_history/core/key_manager/key_manager.dart';
 import 'package:solder_history/data/entity/solder.dart';
 import 'package:solder_history/data/model/military_violation_model.dart';
+import 'package:solder_history/helper/helper_method.dart';
 
-class SolderModel extends Solder {
+class SolderModel extends Solder implements Extra {
+  bool isSent;
+  DateTime? sentDate;
+
   SolderModel({
-    super.sId,
     required super.name,
     required super.forces,
     required super.militaryId,
@@ -30,15 +33,16 @@ class SolderModel extends Solder {
     super.religion,
     super.service,
     super.serviceDuration,
+    required this.isSent,
+    this.sentDate,
   });
 
   SolderModel.fromJson(Map<String, dynamic> json)
       : this(
-          sId: json[KeyManager.id],
           name: json[KeyManager.name],
           forces: json[KeyManager.forces],
           militaryId: json[KeyManager.militaryId],
-          enlistmentDate:DateTime.parse(json[KeyManager.enlistmentDate]) ,
+          enlistmentDate: DateTime.parse(json[KeyManager.enlistmentDate]),
           center: json[KeyManager.center],
           governorate: json[KeyManager.governorate],
           address: json[KeyManager.address],
@@ -52,7 +56,8 @@ class SolderModel extends Solder {
           bloodType: json[KeyManager.bloodType],
           lostDuration: DateTime.parse(json[KeyManager.lostDuration]),
           medicalLevel: json[KeyManager.medicalLevel],
-          netServiceDuration: DateTime.parse(json[KeyManager.netServiceDuration]),
+          netServiceDuration:
+              DateTime.parse(json[KeyManager.netServiceDuration]),
           phoneNumber: json[KeyManager.phoneNumber],
           religion: json[KeyManager.religion],
           service: json[KeyManager.service],
@@ -60,11 +65,12 @@ class SolderModel extends Solder {
           listMilitaryViolation: List<MilitaryViolationModel>.from(
               jsonDecode(json[KeyManager.listMilitaryViolation])
                   .map((e) => MilitaryViolationModel.fromJson(e))).toList(),
+          isSent: json[KeyManager.isSent],
+          sentDate: json[KeyManager.sentDate],
         );
 
   Map<String, dynamic> toJson() {
     return {
-      KeyManager.id: sId,
       KeyManager.name: name,
       KeyManager.forces: forces,
       KeyManager.militaryId: militaryId,
@@ -91,8 +97,19 @@ class SolderModel extends Solder {
           List<MilitaryViolationModel>.from(listMilitaryViolation ?? [])
               .map((e) => e.toJson())
               .toList()),
+      KeyManager.sentDate: sentDate,
+      KeyManager.isSent: isSent,
     };
   }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is SolderModel &&
+          runtimeType == other.runtimeType &&
+          militaryId == other.militaryId &&
+          name == other.name;
+
+  @override
+  int get hashCode => militaryId.hashCode;
 }
-
-

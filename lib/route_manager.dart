@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:solder_history/views/solder_history/add_solder.dart';
+import 'package:solder_history/views/solder_history/history_details.dart';
+import 'package:solder_history/views/solder_history/history_details_list.dart';
 import 'package:solder_history/views/solder_history/solder_list.dart';
 import 'package:solder_history/views/solder_history/solder_screen.dart';
 
@@ -12,6 +14,10 @@ class RouteManager {
         return materialPageRoute(child: AddSolder());
       case SolderList.id:
         return materialPageRoute(child: SolderList());
+ case HistoryDetails.id:
+        return materialPageRoute(child: HistoryDetails());
+      case HistoryDetailsList.id:
+        return materialPageRoute(child: HistoryDetailsList());
 
       default:
         return materialPageRoute(child: Container());

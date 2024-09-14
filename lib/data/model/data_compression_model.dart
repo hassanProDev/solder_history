@@ -17,7 +17,6 @@ class DataCompressionModel extends DataCompression {
  }
 
   Map<String,dynamic> toJson(){
-
     return {
       KeyManager.id:id,
       KeyManager.listOfSolders:jsonEncode(List<SolderModel>.from(listOfSolders??[]).map((e)=>e.toJson()).toList()),

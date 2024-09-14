@@ -1,20 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:solder_history/cubit/data_compression_cubit.dart';
+import 'package:solder_history/data/model/solder_model.dart';
 
 class SolderItem extends StatelessWidget {
-  String name;
-  String address;
-  String militaryId;
+  SolderModel solderModel;
   void Function()? onTap;
-  void Function(BuildContext)? onDelete;
 
   SolderItem({
     super.key,
-    required this.address,
-    required this.name,
-    required this.militaryId,
+    required this.solderModel,
     this.onTap,
-    required onDelete,
   });
 
   @override
@@ -22,20 +19,114 @@ class SolderItem extends StatelessWidget {
     return Card(
       elevation: 5,
       child: Slidable(
-        startActionPane: ActionPane(motion: ScrollMotion(), children: [
+        endActionPane: ActionPane(motion: const ScrollMotion(), children: [
           SlidableAction(
-            onPressed: onDelete,
-            backgroundColor: Color(0xFFFE4A49),
-            foregroundColor: Colors.white,
-            icon: Icons.delete,
-            label: 'Delete',
+            backgroundColor: Colors.blueAccent,
+            onPressed: (context) {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    scrollable: false,
+                    title: Text(
+                      'تسليم سجل',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: Colors.blueAccent),
+                    ),
+                    content: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(solderModel.name),
+                        Text(solderModel.militaryId),
+                      ],
+                    ),
+                    actions: <Widget>[
+                      TextButton(
+                        child: Text('Close'),
+                        onPressed: () {
+                          Navigator.pop(context); // Close the dialog
+                        },
+                      ),
+                      TextButton(
+                        style:
+                        TextButton.styleFrom(backgroundColor: Colors.blueAccent),
+                        child: Text(
+                          'تسليم',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        onPressed: () {
+                          BlocProvider.of<DataCompressionCubit>(context)
+                              .deleteSolder(solderModel);
+                          Navigator.pop(context); // Close the dialog
+                        },
+                      ),
+                    ],
+                  );
+                },
+              );
+            },
+            label: "تسليم السجل",
           )
         ]),
+        startActionPane: ActionPane(
+          motion: const ScrollMotion(),
+          children: [
+            SlidableAction(
+              onPressed: (context) {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      scrollable: false,
+                      title: Text(
+                        'Delete',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(color: Colors.red),
+                      ),
+                      content: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(solderModel.name),
+                          Text(solderModel.militaryId),
+                        ],
+                      ),
+                      actions: <Widget>[
+                        TextButton(
+                          child: Text('Close'),
+                          onPressed: () {
+                            Navigator.pop(context); // Close the dialog
+                          },
+                        ),
+                        TextButton(
+                          style:
+                              TextButton.styleFrom(backgroundColor: Colors.red),
+                          child: Text(
+                            'Delete',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          onPressed: () {
+                            BlocProvider.of<DataCompressionCubit>(context)
+                                .deleteSolder(solderModel);
+                            Navigator.pop(context); // Close the dialog
+                          },
+                        ),
+                      ],
+                    );
+                  },
+                );
+              },
+              backgroundColor: const Color(0xFFFE4A49),
+              foregroundColor: Colors.white,
+              icon: Icons.delete,
+              label: 'Delete',
+            )
+          ],
+        ),
         child: ListTile(
           onTap: onTap,
-          title: Text(name),
-          subtitle: Text(address),
-          trailing: Text(militaryId),
+          title: Text(solderModel.name),
+          subtitle: Text(solderModel.address),
+          trailing: Text(solderModel.militaryId),
         ),
       ),
     );

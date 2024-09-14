@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:solder_history/data/model/solder_model.dart';
 
 class SolderDetails {
-  final formKey=GlobalKey<FormState>();
+  final formKey = GlobalKey<FormState>();
   TextEditingController name = TextEditingController();
   TextEditingController forces = TextEditingController();
   TextEditingController militaryId = TextEditingController();
@@ -25,31 +25,64 @@ class SolderDetails {
   TextEditingController serviceDuration = TextEditingController();
   TextEditingController lostDuration = TextEditingController();
   TextEditingController netServiceDuration = TextEditingController();
+  TextEditingController isSent = TextEditingController();
+  TextEditingController sentDate = TextEditingController();
 
   SolderModel solderModel() {
     return SolderModel(
       name: name.text,
       forces: forces.text,
       militaryId: militaryId.text,
-      enlistmentDate:enlistmentDate.text!=''?DateTime(DateTime.parse(enlistmentDate.text).year,DateTime.parse(enlistmentDate.text).month,DateTime.parse(enlistmentDate.text).day):DateTime(1999),
+      enlistmentDate: enlistmentDate.text != ''
+          ? DateTime(
+              DateTime.parse(enlistmentDate.text).year,
+              DateTime.parse(enlistmentDate.text).month,
+              DateTime.parse(enlistmentDate.text).day)
+          : DateTime(1999),
       center: center.text,
-      governorate: governorate.text,
+      governorate: governorate.text == '' ? "الفيوم" : governorate.text,
       address: address.text,
       idNumber: idNumber.text,
       weapon: weapon.text,
       tripleNumber: tripleNumber.text,
-      dateOfBirth: dateOfBirth.text!=''?DateTime(DateTime.parse(dateOfBirth.text).year,DateTime.parse(dateOfBirth.text).month,DateTime.parse(dateOfBirth.text).day):DateTime(1999),
+      dateOfBirth: dateOfBirth.text != ''
+          ? DateTime(
+              DateTime.parse(dateOfBirth.text).year,
+              DateTime.parse(dateOfBirth.text).month,
+              DateTime.parse(dateOfBirth.text).day)
+          : DateTime(1999),
       educationalLevel: educationalLevel.text,
       recruitmentArea: recruitmentArea.text,
-      serviceEndDate: serviceEndDate.text!=''?DateTime(DateTime.parse(serviceEndDate.text).year,DateTime.parse(serviceEndDate.text).month,DateTime.parse(serviceEndDate.text).day):DateTime(1999),
+      serviceEndDate: serviceEndDate.text != ''
+          ? DateTime(
+              DateTime.parse(serviceEndDate.text).year,
+              DateTime.parse(serviceEndDate.text).month,
+              DateTime.parse(serviceEndDate.text).day)
+          : DateTime(
+                  DateTime.parse(enlistmentDate.text).year,
+                  DateTime.parse(enlistmentDate.text).month,
+                  DateTime.parse(enlistmentDate.text).day)
+              .add(const Duration(days: 3 * 365)),
       bloodType: bloodType.text,
-      lostDuration: lostDuration.text!=''?DateTime(DateTime.parse(lostDuration.text).year,DateTime.parse(lostDuration.text).month,DateTime.parse(lostDuration.text).day):DateTime(1999),
+      lostDuration: lostDuration.text != ''
+          ? DateTime(
+              DateTime.parse(lostDuration.text).year,
+              DateTime.parse(lostDuration.text).month,
+              DateTime.parse(lostDuration.text).day)
+          : DateTime(1999),
       medicalLevel: medicalLevel.text,
-      netServiceDuration: netServiceDuration.text!=''?DateTime(DateTime.parse(netServiceDuration.text).year,DateTime.parse(netServiceDuration.text).month,DateTime.parse(netServiceDuration.text).day):DateTime(1999),
+      netServiceDuration: netServiceDuration.text != ''
+          ? DateTime(
+              DateTime.parse(netServiceDuration.text).year,
+              DateTime.parse(netServiceDuration.text).month,
+              DateTime.parse(netServiceDuration.text).day)
+          : DateTime(1999),
       phoneNumber: phoneNumber.text,
       religion: religion.text,
       service: service.text,
       serviceDuration: serviceDuration.text,
+      isSent: false,
+      sentDate: null,
     );
   }
 }
