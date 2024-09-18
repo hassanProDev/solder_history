@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:meta/meta.dart';
@@ -13,8 +12,11 @@ import 'package:solder_history/data/model/data_compression_model.dart';
 import 'package:solder_history/data/model/device_access_model.dart';
 import 'package:solder_history/data/model/device_auth_model.dart';
 import 'package:solder_history/data/model/solder_model.dart';
+import 'package:solder_history/views/calc_military_service/calc_details.dart';
+import 'package:solder_history/views/calc_military_service/date_calc_model.dart';
 
 import '../helper/helper_method.dart';
+import 'package:http/http.dart' as http;
 
 part 'data_compression_state.dart';
 
@@ -27,12 +29,13 @@ class DataCompressionCubit extends Cubit<DataCompressionState> {
 
   FirebaseCompManager firebaseManager() => FirebaseCompManager(firebaseRepo);
   TextEditingController searchController = TextEditingController();
-  DataCompressionModel dataList=DataCompressionModel();
+  DataCompressionModel dataList = DataCompressionModel();
+
   void getDataComp() {
     emit(GetDataCompressionLoading());
     try {
       // dataManager().deleteData();
-       dataList= dataManager().getData();
+      dataList = dataManager().getData();
 
       emit(GetDataCompressionSuccess(dataList));
     } catch (e) {
@@ -41,11 +44,12 @@ class DataCompressionCubit extends Cubit<DataCompressionState> {
     }
   }
 
-  DataCompressionModel soldersData=DataCompressionModel();
+  DataCompressionModel soldersData = DataCompressionModel();
+
   void fetchSolders(DataCompressionModel data) {
     emit(FetchDataCompressionLoading());
     try {
-      soldersData=data;
+      soldersData = data;
       emit(FetchDataCompressionSuccess());
     } catch (e) {
       emit(FetchDataCompressionFailed());
@@ -64,11 +68,12 @@ class DataCompressionCubit extends Cubit<DataCompressionState> {
     }
   }
 
-  Extra solderData=Extra();
+  Extra solderData = Extra();
+
   void fetchSolder(SolderModel data) {
     emit(FetchDataCompressionLoading());
     try {
-      solderData=data;
+      solderData = data;
       emit(FetchDataCompressionSuccess());
     } catch (e) {
       emit(FetchDataCompressionFailed());
@@ -96,12 +101,12 @@ class DataCompressionCubit extends Cubit<DataCompressionState> {
     }
   }
 
-  refreshData(){
+  refreshData() {
     emit(RefreshDataCompressionLoading());
-    try{
+    try {
       firebaseManager().refreshData();
       emit(RefreshDataCompressionSuccess());
-    }catch(e){
+    } catch (e) {
       emit(RefreshDataCompressionFailed());
     }
   }
@@ -120,12 +125,86 @@ class DataCompressionCubit extends Cubit<DataCompressionState> {
     emit(SearchDataCompression());
   }
 
-  bool access=false;
-  void deviceAccess(){
-    DeviceAuthModel? deviceAuthModel;
-    deviceAuthModel=DeviceAuthModel.fromJson(getAuthDevice());
-    if(deviceAuthModel.listDeviceAccess.isEmpty)return;
-    access=deviceAuthModel.listDeviceAccess.firstWhere((e)=>e.id==androidId).access??false;
+  bool access = false;
+  bool control = false;
+
+  void deviceAccess() {
+    DeviceAccessModel deviceAuthModel =
+        DeviceAccessModel.fromJson(getAuthDevice());
+    access = deviceAuthModel.access;
+    control = deviceAuthModel.control;
     emit(GetAccess());
+  }
+
+  sendHistory() {}
+
+//   Future<void> checkInternetConnection() async {
+//     var connectivityResult = await Connectivity().checkConnectivity();
+//
+//     if (connectivityResult == ConnectivityResult.mobile ||
+//         connectivityResult == ConnectivityResult.wifi ||
+//         connectivityResult ==
+//             [ConnectivityResult.wifi, ConnectivityResult.mobile]) {
+//       // Connected to either mobile data or Wi-Fi
+//       isConnected = true;
+//     } else {
+//       // Not connected to any network
+//       isConnected = false;
+//       emit(InternetConnection());
+//     }
+//   }
+// }
+
+  bool isConnected = false;
+   void checkInternetConnection() async {
+    try {
+      final response = await http.get(Uri.parse('https://jsonplaceholder.typicode.com/posts'));
+      if (response.statusCode == 200) {
+        isConnected = true;
+        print(isConnected);
+      } else {
+        isConnected = false;
+      }
+      emit(InternetConnection());
+    } catch (e) {
+      isConnected = false;
+      print(e.toString());
+      emit(InternetConnection());
+    }
+    // print(isConnected);
+  }
+
+
+  DateClcModel absenceDuration=DateClcModel();
+  DateClcModel allServiceDuration=DateClcModel();
+  DateClcModel goodServiceDuration=DateClcModel();
+
+  calcDate(CalcDetails calcDetails){
+    absenceDuration=calcProcess(date1: calcDetails.attendance.fromControllerToInt(), date2: calcDetails.absence.fromControllerToInt());
+    goodServiceDuration=calcProcess(date1: calcDetails.serviceDuration.fromControllerToInt(), date2: calcDetails.lossDuration.fromControllerToInt());
+    allServiceDuration=calcProcess(date1: calcDetails.absence.fromControllerToInt(), date2: calcDetails.serviceStart.fromControllerToInt());
+    emit(Calculate());
+  }
+
+  newCalc(CalcDetails calcDetails){
+    calcDetails.absence.dayController.clear();
+    calcDetails.absence.monthController.clear();
+    calcDetails.absence.yearController.clear();
+    calcDetails.attendance.dayController.clear();
+    calcDetails.attendance.monthController.clear();
+    calcDetails.attendance.yearController.clear();
+    calcDetails.serviceDuration.dayController.clear();
+    calcDetails.serviceDuration.monthController.clear();
+    calcDetails.serviceDuration.yearController.clear();
+    calcDetails.serviceStart.dayController.clear();
+    calcDetails.serviceStart.monthController.clear();
+    calcDetails.serviceStart.yearController.clear();
+    calcDetails.lossDuration.dayController.clear();
+    calcDetails.lossDuration.monthController.clear();
+    calcDetails.lossDuration.yearController.clear();
+    calcDetails.serviceEnd.dayController.clear();
+    calcDetails.serviceEnd.monthController.clear();
+    calcDetails.serviceEnd.yearController.clear();
+    calcDate(calcDetails);
   }
 }

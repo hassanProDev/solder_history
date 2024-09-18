@@ -20,7 +20,7 @@ class HistoryDetails extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "جرد السجلات",
+          "جرد سجلات اجمالي ${allHistory.length}",
           style: TextStyle(color: Colors.white),
         ),
         centerTitle: true,
@@ -63,7 +63,7 @@ class HistoryDetails extends StatelessWidget {
               ),
               HistoryDetailsWidget(
                 text:
-                    "عدد السجلات تخطت ال36 عام: ${allHistory.where((e) => e.educationalLevel == "فوق متوسط" && calculateAge(e.dateOfBirth) >= 36).length}",
+                    "عدد سجلات فوق متوسط تخطت ال36 عام: ${allHistory.where((e) => e.educationalLevel == "فوق متوسط" && calculateAge(e.dateOfBirth) >= 36).length}",
                 onTap: () {
                   BlocProvider.of<DataCompressionCubit>(context).fetchSpecialSolders(
                       DataCompressionModel(
@@ -78,7 +78,7 @@ class HistoryDetails extends StatelessWidget {
               ),
               HistoryDetailsWidget(
                 text:
-                    "عدد السجلات تخطت ال36 عام: ${allHistory.where((e) => e.educationalLevel == "متوسط" && calculateAge(e.dateOfBirth) >= 36).length}",
+                    "عدد سجلات متوسط تخطت ال36 عام: ${allHistory.where((e) => e.educationalLevel == "متوسط" && calculateAge(e.dateOfBirth) >= 36).length}",
                 onTap: () {
                   BlocProvider.of<DataCompressionCubit>(context).fetchSpecialSolders(
                       DataCompressionModel(
@@ -167,6 +167,56 @@ class HistoryDetails extends StatelessWidget {
                 Navigator.pushNamed(context, HistoryDetailsList.id,
                     arguments: "امي تحت ال36 عام");},
               ),
+              /////////////////////////////////////////////////////////////////////////
+              HistoryDetailsWidget(
+                text:
+                    "عدد سجلات عليا لم تسرح دفعتة : ${allHistory.where((e) => e.educationalLevel == "عليا" && e.enlistmentDate.add(Duration(days: 30*13)).isBefore(DateTime.now())).length}",
+                onTap: () {
+                  BlocProvider.of<DataCompressionCubit>(context).fetchSpecialSolders(
+                      DataCompressionModel(
+                          listOfSolders: allHistory
+                              .where((e) =>  e.educationalLevel == "عليا" && e.enlistmentDate.add(Duration(days: 30*13)).isBefore(DateTime.now()))
+                              .toList()));
+                  Navigator.pushNamed(context, HistoryDetailsList.id,
+                      arguments: "عليا لم تسرح دفعتة ");
+                },
+              ),
+              HistoryDetailsWidget(
+                text:
+                    "عدد السجلات فوق متوسط لم تسرح دفعتة : ${allHistory.where((e) => e.educationalLevel == "فوق متوسط" && e.enlistmentDate.add(Duration(days: 30*19)).isBefore(DateTime.now())).length}",
+                onTap: () {
+                  BlocProvider.of<DataCompressionCubit>(context).fetchSpecialSolders(
+                      DataCompressionModel(
+                          listOfSolders: allHistory
+                              .where((e) => e.educationalLevel == "فوق متوسط" && e.enlistmentDate.add(Duration(days: 30*19)).isBefore(DateTime.now()))
+                              .toList()));
+                  Navigator.pushNamed(context, HistoryDetailsList.id,
+                      arguments: "فوق متوسط لم تسرح دفعتة ");
+                },
+              ),
+              HistoryDetailsWidget(
+                text:
+                    "عدد السجلات متوسط لم تسرح دفعتة : ${allHistory.where((e) => e.educationalLevel == "متوسط" && e.enlistmentDate.add(Duration(days: 30*25)).isBefore(DateTime.now())).length}",
+                onTap: () { BlocProvider.of<DataCompressionCubit>(context).fetchSpecialSolders(
+                    DataCompressionModel(
+                        listOfSolders: allHistory
+                            .where((e) => e.educationalLevel == "متوسط" && e.enlistmentDate.add(Duration(days: 30*25)).isBefore(DateTime.now()))
+                            .toList()));
+                Navigator.pushNamed(context, HistoryDetailsList.id,
+                    arguments: "متوسط لم تسرح دفعتة ");},
+              ),
+              HistoryDetailsWidget(
+                text:
+                    "عدد السجلات امي لم تسرح دفعتة : ${allHistory.where((e) => e.educationalLevel == "امي" && e.enlistmentDate.add(Duration(days: 30*37)).isBefore(DateTime.now())).length}",
+                onTap: () { BlocProvider.of<DataCompressionCubit>(context).fetchSpecialSolders(
+                    DataCompressionModel(
+                        listOfSolders: allHistory
+                            .where((e) => e.educationalLevel == "امي" && e.enlistmentDate.add(Duration(days: 30*37)).isBefore(DateTime.now()))
+                            .toList()));
+                Navigator.pushNamed(context, HistoryDetailsList.id,
+                    arguments: "امي لم تسرح دفعتة ");},
+              ),
+              //////////////////////////////////////////////////////////////////////
               HistoryDetailsWidget(
                 text:
                     "سجلات اوشكت علي وصول ال 36 عام :${allHistory.where((e) => calculateAge(e.dateOfBirth.add(Duration(days: 30))) == 36).length}",

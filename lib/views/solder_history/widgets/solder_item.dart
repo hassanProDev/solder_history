@@ -48,16 +48,28 @@ class SolderItem extends StatelessWidget {
                         },
                       ),
                       TextButton(
-                        style:
-                        TextButton.styleFrom(backgroundColor: Colors.blueAccent),
+                        style: TextButton.styleFrom(
+                            backgroundColor: Colors.blueAccent),
                         child: Text(
                           'تسليم',
                           style: TextStyle(color: Colors.white),
                         ),
                         onPressed: () {
-                          BlocProvider.of<DataCompressionCubit>(context)
-                              .deleteSolder(solderModel);
-                          Navigator.pop(context); // Close the dialog
+                          // BlocProvider.of<DataCompressionCubit>(context)
+                          //     .fetchSolder(solderModel);
+                          showDatePicker(
+                            context: context,
+                            initialDate: DateTime.now(),
+                            firstDate: DateTime(1940),
+                            lastDate: DateTime.now().add(
+                              const Duration(days: 3 * 365),
+                            ),
+                          ).then((value) {
+                            if (value == null) return;
+                            // solderModel.sentDate=value;
+                            // solderModel.isSent=true;
+                             Navigator.pop(context); // Close the dialog
+                          });
                         },
                       ),
                     ],

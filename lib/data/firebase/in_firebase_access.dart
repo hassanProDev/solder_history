@@ -13,47 +13,57 @@ import 'package:solder_history/helper/helper_method.dart';
 
 class InFirebaseAccess {
   final accessRef = FirebaseFirestore.instance.collection("auth").withConverter(
-    fromFirestore: (snap, _) => DeviceAuthModel.fromJson(snap.data()!),
-    toFirestore: (device, _) => device.toJson(),
-  );
+        fromFirestore: (snap, _) => DeviceAccessModel.fromJson(snap.data()!),
+        toFirestore: (device, _) => device.toJson(),
+      );
 
   getDevices() async {
     // if (fireBaseDevices.docs.isEmpty) return;
   }
 
-   addDevice() async {
+  Future<void> addDevice() async {
     final doc = accessRef.doc();
-    final fireBaseDevices = await accessRef.get();
-    if (fireBaseDevices.docs.isEmpty) {
-     return doc.set(DeviceAuthModel(
-        change: false,
-        listDeviceAccess: [
-          DeviceAccessModel(access: false, control: false, id: androidId)
-        ],
-        id: doc.id,
-      ),);
-    }
-    DeviceAuthModel deviceAuthModel = fireBaseDevices.docs.first.data();
-    if (deviceAuthModel.listDeviceAccess.any((e)=>e.id==androidId)) return;
-    deviceAuthModel.listDeviceAccess.add(DeviceAccessModel(access: false, control: false, id: androidId));
-   return accessRef.doc(deviceAuthModel.id).update(deviceAuthModel.toJson());
+    if (await checkIfDocExistsByField()) return;
+    DeviceAccessModel deviceAccessModel = DeviceAccessModel(
+      access: false,
+      control: false,
+      name: null,
+      devId: androidId,
+      id: doc.id,
+    );
+    doc.set(deviceAccessModel);
+    deviceBox.put("auth", deviceAccessModel.toJson());
   }
 
-  updateDevice()async{
+  Future<bool> checkIfDocExistsByField() async {
+    try {
+      QuerySnapshot querySnapshot = await accessRef
+          .where(KeyManager.devId, isEqualTo: androidId)
+          .limit(1)
+          .get();
+
+      return querySnapshot.docs.isNotEmpty;
+    } catch (e) {
+      print('Error checking document by field: $e');
+      return false;
+    }
+  }
+
+  Future<void> updateDevice() async {
     try {
       await addDevice();
-      final fireBaseDevices = await accessRef.get();
-      if(fireBaseDevices.docs.isEmpty)return;
-      accessRef.doc(fireBaseDevices.docs.first.data().id).snapshots().listen((e){
-        if(e.data()?.change==true) {
-          DeviceAuthModel deviceAuthModel = e.data()!;
-          deviceAuthModel.change = false;
-          accessRef.doc(fireBaseDevices.docs.first
-              .data()
-              .id).update(deviceAuthModel.toJson());
-          deviceBox.put("auth", deviceAuthModel.toJson());
+      if (!(await checkIfDocExistsByField())) return;
+      accessRef
+          .where(KeyManager.devId, isEqualTo: androidId)
+          .limit(1)
+          .snapshots()
+          .listen((e) {
+        if (e.docs.first.data().access !=
+                DeviceAccessModel.fromJson(getAuthDevice()).access ||
+            e.docs.first.data().control !=
+                DeviceAccessModel.fromJson(getAuthDevice()).control) {
+          deviceBox.put("auth", e.docs.first.data().toJson());
         }
-        print(getAuthDevice());
       });
     } on Exception catch (e) {
       // TODO

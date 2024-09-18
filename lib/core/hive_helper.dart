@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:solder_history/core/key_manager/key_manager.dart';
+import 'package:solder_history/helper/helper_method.dart';
 
 final box = Hive.box("DataCompression");
 final deviceBox = Hive.box("device");
@@ -20,6 +21,8 @@ Map? getMainNull() => box.get("mainData");
 
 Map getAuthDevice() => deviceBox.get("auth", defaultValue: {
       KeyManager.id: "",
-      KeyManager.change: false,
-      KeyManager.listDeviceAccess: "[]",
+      KeyManager.access: false,
+      KeyManager.devId: androidId,
+      KeyManager.control: false,
+      KeyManager.name: "",
     });

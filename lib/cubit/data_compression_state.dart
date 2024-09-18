@@ -51,5 +51,7 @@ class RefreshDataCompressionLoading extends DataCompressionState {}
 
 class SearchDataCompression extends DataCompressionState {}
 class GetAccess extends DataCompressionState {}
+class InternetConnection extends DataCompressionState {}
+class Calculate extends DataCompressionState {}
 
 

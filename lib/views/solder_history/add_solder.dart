@@ -125,9 +125,7 @@ class AddSolder extends StatelessWidget {
                                             context: context,
                                             initialDate: DateTime.now(),
                                             firstDate: DateTime(1940),
-                                            lastDate: DateTime.now().add(
-                                              const Duration(days: 3 * 365),
-                                            ),
+                                            lastDate: DateTime.now(),
                                           ).then((value) {
                                             if (value == null) return;
                                             solderDetails.dateOfBirth.text =
@@ -160,9 +158,7 @@ class AddSolder extends StatelessWidget {
                                             context: context,
                                             initialDate: DateTime.now(),
                                             firstDate: DateTime(1940),
-                                            lastDate: DateTime.now().add(
-                                              const Duration(days: 3 * 365),
-                                            ),
+                                            lastDate: DateTime.now(),
                                           ).then((value) {
                                             if (value == null) return;
                                             solderDetails.enlistmentDate.text =

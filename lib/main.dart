@@ -27,13 +27,14 @@ import 'package:solder_history/views/solder_history/solder_screen.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  getDeviceId();
+
   await Hive.initFlutter();
   await Hive.openBox("DataCompression");
   await Hive.openBox("device");
   // deviceBox.delete("auth");
-  getDeviceId();
   InFirebaseAccess().updateDevice();
-  print(getAuthDevice());
+  // print(getAuthDevice());
   runApp(MyApp());
 }
 

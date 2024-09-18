@@ -6,6 +6,7 @@ class KeyManager {
   static const String listOfSolders="listOfSoldersKey";
   static const String listDeviceAccess="listDeviceAccessKey";
   static const String access="accessKey";
+  static const String devId="devIdKey";
   static const String change="changeKey";
   static const String control="controlKey";
   static const String name = "nameKey";
