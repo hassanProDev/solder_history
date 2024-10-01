@@ -17,7 +17,12 @@ static const String id="historyDetailsList";
         // String title=ModalRoute.of(context)?.settings.arguments as String;
 
         myCubit.getDataComp();
-        List<SolderModel> listOfSolder = myCubit.specialSoldersData.listOfSolders??[];
+        List<SolderModel> listOfSolder = (myCubit.specialSoldersData.listOfSolders??[]).where((e) =>
+        e.name.contains(myCubit.searchController.text) ||
+            e.militaryId.contains(myCubit.searchController.text) ||
+            e.center.contains(myCubit.searchController.text) ||
+            e.address.contains(myCubit.searchController.text) ||
+            e.idNumber.contains(myCubit.searchController.text)).toList();
         return Scaffold(
           appBar: AppBar(
             iconTheme: IconThemeData(color: Colors.white),

@@ -9,8 +9,8 @@ class FirebaseCompManager{
     repo.updateData();
   }
 
-  void deleteSolder(SolderModel solder){
-    repo.deleteData(solder);
+  void deleteSolder(SolderModel solder,bool isConnected){
+    repo.deleteData(solder,isConnected);
   }
   void refreshData(){
     repo.refreshData();

@@ -16,6 +16,8 @@ class SolderItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isConnected =
+        BlocProvider.of<DataCompressionCubit>(context).isConnected;
     return Card(
       elevation: 5,
       child: Slidable(
@@ -29,7 +31,7 @@ class SolderItem extends StatelessWidget {
                   return AlertDialog(
                     scrollable: false,
                     title: Text(
-                      'تسليم سجل',
+                      'قيد التسليم',
                       textAlign: TextAlign.center,
                       style: TextStyle(color: Colors.blueAccent),
                     ),
@@ -42,36 +44,38 @@ class SolderItem extends StatelessWidget {
                     ),
                     actions: <Widget>[
                       TextButton(
-                        child: Text('Close'),
+                        child: Text('اغلق'),
                         onPressed: () {
                           Navigator.pop(context); // Close the dialog
                         },
                       ),
-                      TextButton(
-                        style: TextButton.styleFrom(
-                            backgroundColor: Colors.blueAccent),
-                        child: Text(
-                          'تسليم',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                        onPressed: () {
-                          // BlocProvider.of<DataCompressionCubit>(context)
-                          //     .fetchSolder(solderModel);
-                          showDatePicker(
-                            context: context,
-                            initialDate: DateTime.now(),
-                            firstDate: DateTime(1940),
-                            lastDate: DateTime.now().add(
-                              const Duration(days: 3 * 365),
-                            ),
-                          ).then((value) {
-                            if (value == null) return;
-                            // solderModel.sentDate=value;
-                            // solderModel.isSent=true;
-                             Navigator.pop(context); // Close the dialog
-                          });
-                        },
-                      ),
+                      isConnected
+                          ? TextButton(
+                              style: TextButton.styleFrom(
+                                  backgroundColor: Colors.blueAccent),
+                              child: Text(
+                                'اضف مسلسل',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                              onPressed: () {
+                                // BlocProvider.of<DataCompressionCubit>(context)
+                                //     .fetchSolder(solderModel);
+                                showDatePicker(
+                                  context: context,
+                                  initialDate: DateTime.now(),
+                                  firstDate: DateTime(1940),
+                                  lastDate: DateTime.now().add(
+                                    const Duration(days: 3 * 365),
+                                  ),
+                                ).then((value) {
+                                  if (value == null) return;
+                                  Navigator.pop(context); // Close the dialog
+
+                                  // ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                });
+                              },
+                            )
+                          : Text("لا يوجد انترنت"),
                     ],
                   );
                 },
@@ -91,7 +95,7 @@ class SolderItem extends StatelessWidget {
                     return AlertDialog(
                       scrollable: false,
                       title: Text(
-                        'Delete',
+                        'حذف',
                         textAlign: TextAlign.center,
                         style: TextStyle(color: Colors.red),
                       ),
@@ -104,7 +108,7 @@ class SolderItem extends StatelessWidget {
                       ),
                       actions: <Widget>[
                         TextButton(
-                          child: Text('Close'),
+                          child: Text('اغلق'),
                           onPressed: () {
                             Navigator.pop(context); // Close the dialog
                           },
@@ -112,14 +116,25 @@ class SolderItem extends StatelessWidget {
                         TextButton(
                           style:
                               TextButton.styleFrom(backgroundColor: Colors.red),
-                          child: Text(
-                            'Delete',
+                          child:const Text(
+                            'حذف',
                             style: TextStyle(color: Colors.white),
                           ),
                           onPressed: () {
                             BlocProvider.of<DataCompressionCubit>(context)
                                 .deleteSolder(solderModel);
                             Navigator.pop(context); // Close the dialog
+                            if ((BlocProvider.of<DataCompressionCubit>(context)
+                                        .dataList
+                                        .listOfSolders ??
+                                    [])
+                                .contains(solderModel)) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                               const SnackBar(
+                                  content: Text("لا يوجد اتصال بالانترنت"),
+                                ),
+                              );
+                            }
                           },
                         ),
                       ],
@@ -130,7 +145,7 @@ class SolderItem extends StatelessWidget {
               backgroundColor: const Color(0xFFFE4A49),
               foregroundColor: Colors.white,
               icon: Icons.delete,
-              label: 'Delete',
+              label: 'حذف',
             )
           ],
         ),

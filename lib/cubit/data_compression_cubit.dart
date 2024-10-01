@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:meta/meta.dart';
 import 'package:solder_history/core/hive_helper.dart';
 import 'package:solder_history/core/key_manager/key_manager.dart';
+import 'package:solder_history/data/firebase/in_firebase_access.dart';
 import 'package:solder_history/data/firebase/in_firebase_data.dart';
 import 'package:solder_history/data/local/in_hive_data.dart';
 import 'package:solder_history/data/manager/data_compression_manager.dart';
@@ -87,7 +88,7 @@ class DataCompressionCubit extends Cubit<DataCompressionState> {
       emit(AddDataCompressionSuccess());
     } catch (e) {
       emit(AddDataCompressionFailed());
-      print(e.toString());
+      // print(e.toString());
     }
   }
 
@@ -114,7 +115,7 @@ class DataCompressionCubit extends Cubit<DataCompressionState> {
   deleteSolder(SolderModel solder) {
     emit(DeleteSolderLoading());
     try {
-      firebaseManager().deleteSolder(solder);
+      firebaseManager().deleteSolder(solder,isConnected);
       emit(DeleteSolderSuccess());
     } on Exception catch (e) {
       emit(DeleteSolderFailed());
@@ -138,55 +139,51 @@ class DataCompressionCubit extends Cubit<DataCompressionState> {
 
   sendHistory() {}
 
-//   Future<void> checkInternetConnection() async {
-//     var connectivityResult = await Connectivity().checkConnectivity();
-//
-//     if (connectivityResult == ConnectivityResult.mobile ||
-//         connectivityResult == ConnectivityResult.wifi ||
-//         connectivityResult ==
-//             [ConnectivityResult.wifi, ConnectivityResult.mobile]) {
-//       // Connected to either mobile data or Wi-Fi
-//       isConnected = true;
-//     } else {
-//       // Not connected to any network
-//       isConnected = false;
-//       emit(InternetConnection());
-//     }
-//   }
-// }
+  updateDevice() {
+    if (isConnected) {
+      InFirebaseAccess().updateDevice();
+      emit(InternetConnection());
+    }
+  }
 
   bool isConnected = false;
-   void checkInternetConnection() async {
+
+  void checkInternetConnection() async {
     try {
-      final response = await http.get(Uri.parse('https://jsonplaceholder.typicode.com/posts'));
+      final response = await http
+          .get(Uri.parse('https://jsonplaceholder.typicode.com/posts'));
       if (response.statusCode == 200) {
         isConnected = true;
-        print(isConnected);
+        emit(InternetConnection());
       } else {
         isConnected = false;
+        emit(InternetConnection());
       }
-      emit(InternetConnection());
     } catch (e) {
       isConnected = false;
-      print(e.toString());
       emit(InternetConnection());
     }
     // print(isConnected);
   }
 
+  DateClcModel absenceDuration = DateClcModel();
+  DateClcModel allServiceDuration = DateClcModel();
+  DateClcModel goodServiceDuration = DateClcModel();
 
-  DateClcModel absenceDuration=DateClcModel();
-  DateClcModel allServiceDuration=DateClcModel();
-  DateClcModel goodServiceDuration=DateClcModel();
-
-  calcDate(CalcDetails calcDetails){
-    absenceDuration=calcProcess(date1: calcDetails.attendance.fromControllerToInt(), date2: calcDetails.absence.fromControllerToInt());
-    goodServiceDuration=calcProcess(date1: calcDetails.serviceDuration.fromControllerToInt(), date2: calcDetails.lossDuration.fromControllerToInt());
-    allServiceDuration=calcProcess(date1: calcDetails.absence.fromControllerToInt(), date2: calcDetails.serviceStart.fromControllerToInt());
+  calcDate(CalcDetails calcDetails) {
+    absenceDuration = calcProcess(
+        date1: calcDetails.attendance.fromControllerToInt(),
+        date2: calcDetails.absence.fromControllerToInt());
+    goodServiceDuration = calcProcess(
+        date1: calcDetails.serviceDuration.fromControllerToInt(),
+        date2: calcDetails.lossDuration.fromControllerToInt());
+    allServiceDuration = calcProcess(
+        date1: calcDetails.absence.fromControllerToInt(),
+        date2: calcDetails.serviceStart.fromControllerToInt());
     emit(Calculate());
   }
 
-  newCalc(CalcDetails calcDetails){
+  newCalc(CalcDetails calcDetails) {
     calcDetails.absence.dayController.clear();
     calcDetails.absence.monthController.clear();
     calcDetails.absence.yearController.clear();

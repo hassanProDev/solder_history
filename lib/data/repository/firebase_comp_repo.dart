@@ -5,7 +5,7 @@ import 'package:solder_history/data/model/solder_model.dart';
 abstract class FirebaseCompRepo{
   void addData(DataCompressionModel data);
 
-  void deleteData(SolderModel solder);
+  void deleteData(SolderModel solder,bool isConnected);
 
   void updateData();
 

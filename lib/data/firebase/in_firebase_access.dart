@@ -44,7 +44,7 @@ class InFirebaseAccess {
 
       return querySnapshot.docs.isNotEmpty;
     } catch (e) {
-      print('Error checking document by field: $e');
+      // print('Error checking document by field: $e');
       return false;
     }
   }

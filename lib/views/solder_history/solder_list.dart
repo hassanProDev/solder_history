@@ -22,18 +22,19 @@ class SolderList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final myCubit = BlocProvider.of<DataCompressionCubit>(context);
-    myCubit.checkInternetConnection();
 
     return BlocBuilder<DataCompressionCubit, DataCompressionState>(
       builder: (context, state) {
         myCubit.getDataComp();
         // print(myCubit.isConnected);
-
+        myCubit.checkInternetConnection();
+        // myCubit.updateDevice();
         List<SolderModel>? listOfSolder = (myCubit.dataList.listOfSolders ?? [])
             .where((e) =>
                 e.name.contains(myCubit.searchController.text) ||
                 e.militaryId.contains(myCubit.searchController.text) ||
                 e.center.contains(myCubit.searchController.text) ||
+                e.address.contains(myCubit.searchController.text) ||
                 e.idNumber.contains(myCubit.searchController.text))
             .toList();
         myCubit.deviceAccess();
@@ -177,7 +178,7 @@ class SolderList extends StatelessWidget {
                                   },
                                   controller: myCubit.searchController,
                                   text:
-                                      "ابحث من خلال - (الاسم-رقم الشرطة-المركز-الرقم القومي)",
+                                      "ابحث من خلال - (الاسم-رقم الشرطة-المركز-الرقم القومي-عنوان)",
                                 ),
                                 SizedBox(
                                   height: 12,

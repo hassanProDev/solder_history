@@ -1,7 +1,7 @@
 import 'package:solder_history/data/model/military_violation_model.dart';
 
 class Solder {
-
+  String sId;
   String name;
   String forces;
   String militaryId;
@@ -27,6 +27,7 @@ class Solder {
   List<MilitaryViolationModel>? listMilitaryViolation;
 
   Solder({
+    this.sId="",
     required this.name,
     required this.forces,
     required this.militaryId,

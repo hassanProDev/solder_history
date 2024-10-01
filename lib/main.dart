@@ -28,7 +28,6 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   getDeviceId();
-
   await Hive.initFlutter();
   await Hive.openBox("DataCompression");
   await Hive.openBox("device");

@@ -10,6 +10,7 @@ class SolderModel extends Solder implements Extra {
   DateTime? sentDate;
 
   SolderModel({
+    super.sId,
     required super.name,
     required super.forces,
     required super.militaryId,
@@ -39,6 +40,7 @@ class SolderModel extends Solder implements Extra {
 
   SolderModel.fromJson(Map<String, dynamic> json)
       : this(
+          sId: json[KeyManager.id],
           name: json[KeyManager.name],
           forces: json[KeyManager.forces],
           militaryId: json[KeyManager.militaryId],
@@ -71,6 +73,7 @@ class SolderModel extends Solder implements Extra {
 
   Map<String, dynamic> toJson() {
     return {
+      KeyManager.id: sId,
       KeyManager.name: name,
       KeyManager.forces: forces,
       KeyManager.militaryId: militaryId,

@@ -22,34 +22,36 @@ class InFirebaseData extends FirebaseCompRepo {
       doc.set(
           DataCompressionModel(id: doc.id, listOfSolders: data.listOfSolders));
     } on Exception catch (e) {
-      print(e.toString());
+      // print(e.toString());
     }
   }
 
   @override
-  void deleteData(SolderModel solder) async {
+  void deleteData(SolderModel solder, bool isConnected) async {
     try {
       DataCompressionModel mainData =
-      DataCompressionModel.fromJson(getMainHive());
+          DataCompressionModel.fromJson(getMainHive());
       DataCompressionModel data = DataCompressionModel.fromJson(getDataHive());
-      final snap = await dataCompressionRef.get();
-      if ((mainData.listOfSolders??[]).contains(solder)==false) {
+      if ((mainData.listOfSolders ?? []).contains(solder) && isConnected) {
+        final snap = await dataCompressionRef.get();
+
         if (snap.docs.isEmpty) return;
         DataCompressionModel fireData = snap.docs.first.data();
-        print("before ${fireData.listOfSolders ?? []}");
+        // print("before ${fireData.listOfSolders ?? []}");
         (fireData.listOfSolders ?? [])
             .removeWhere((e) => e.militaryId == solder.militaryId);
-        print("after ${fireData.listOfSolders ?? []}");
+        // print("after ${fireData.listOfSolders ?? []}");
 
         dataCompressionRef.doc(fireData.id).update(fireData.toJson());
         box.put("data", fireData.toJson());
-      } else {
+      }
+      if ((mainData.listOfSolders ?? []).contains(solder)) {
         (mainData.listOfSolders ?? [])
             .removeWhere((e) => e.militaryId == solder.militaryId);
         box.put("mainData", mainData.toJson());
       }
     } on Exception catch (e) {
-      print("delete solder : ${e.toString()}");
+      // print("delete solder : ${e.toString()}");
     }
   }
 
@@ -88,17 +90,18 @@ class InFirebaseData extends FirebaseCompRepo {
   }
 
   sendHistory(SolderModel solder) async {
-    DataCompressionModel mainData=DataCompressionModel.fromJson(getMainHive());
-    DataCompressionModel data=DataCompressionModel.fromJson(getDataHive());
+    DataCompressionModel mainData =
+        DataCompressionModel.fromJson(getMainHive());
+    DataCompressionModel data = DataCompressionModel.fromJson(getDataHive());
     int index;
-    if((mainData.listOfSolders??[]).contains(solder)){
-     index =(mainData.listOfSolders??[]).indexWhere((e)=>e==solder);
-      (mainData.listOfSolders??[])[index]==solder;
+    if ((mainData.listOfSolders ?? []).contains(solder)) {
+      index = (mainData.listOfSolders ?? []).indexWhere((e) => e == solder);
+      (mainData.listOfSolders ?? [])[index] == solder;
       box.put("mainData", mainData.toJson());
     }
-    if((data.listOfSolders??[]).contains(solder)){
-      index=(data.listOfSolders??[]).indexWhere((e)=>e==solder);
-      (data.listOfSolders??[])[index]=solder;
+    if ((data.listOfSolders ?? []).contains(solder)) {
+      index = (data.listOfSolders ?? []).indexWhere((e) => e == solder);
+      (data.listOfSolders ?? [])[index] = solder;
       box.put("update", "value");
     }
   }

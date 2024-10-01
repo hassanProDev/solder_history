@@ -41,7 +41,7 @@ class SolderScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "سجل المجند",
+          " ${solderModel.sId}سجل المجند ",
           style: TextStyle(color: Colors.white),
         ),
         centerTitle: true,
