@@ -68,7 +68,7 @@ class SolderModel extends Solder implements Extra {
               jsonDecode(json[KeyManager.listMilitaryViolation])
                   .map((e) => MilitaryViolationModel.fromJson(e))).toList(),
           isSent: json[KeyManager.isSent],
-          sentDate: json[KeyManager.sentDate],
+          sentDate:json[KeyManager.sentDate]!="null"||json[KeyManager.sentDate]!=null? DateTime.parse(json[KeyManager.sentDate]=="null"||json[KeyManager.sentDate]==null?DateTime.now().toString():json[KeyManager.sentDate]):null,
         );
 
   Map<String, dynamic> toJson() {
@@ -100,9 +100,15 @@ class SolderModel extends Solder implements Extra {
           List<MilitaryViolationModel>.from(listMilitaryViolation ?? [])
               .map((e) => e.toJson())
               .toList()),
-      KeyManager.sentDate: sentDate,
+      KeyManager.sentDate: sentDate.toString(),
       KeyManager.isSent: isSent,
     };
+  }
+
+  @override
+  String toString() {
+    // TODO: implement toString
+    return "SolderModel(sId: $sId,phoneNumber: $phoneNumber,sentDate:$sentDate ,name: $name, forces: $forces, militaryId: $militaryId, enlistmentDate: $enlistmentDate, center: $center, governorate: $governorate, address: $address, idNumber: $idNumber, weapon: $weapon, tripleNumber: $tripleNumber, dateOfBirth: $dateOfBirth, educationalLevel: $educationalLevel, recruitmentArea: $recruitmentArea, serviceEndDate: $serviceEndDate, isSent: $isSent)";
   }
 
   @override

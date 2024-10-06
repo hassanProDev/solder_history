@@ -7,7 +7,8 @@ abstract class DataCompressionRepo {
 
   void deleteData();
 
-  void updateData(DataCompressionModel data);
+  void updateData(SolderModel solder);
   DataCompressionModel getData();
+  void addSerial(SolderModel solder);
 
 }

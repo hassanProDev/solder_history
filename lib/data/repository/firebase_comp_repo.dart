@@ -8,6 +8,7 @@ abstract class FirebaseCompRepo{
   void deleteData(SolderModel solder,bool isConnected);
 
   void updateData();
+  void uploadData();
 
   Stream<DocumentSnapshot<DataCompressionModel>> getData();
   void refreshData();

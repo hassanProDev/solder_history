@@ -4,6 +4,7 @@ import 'package:solder_history/cubit/data_compression_cubit.dart';
 import 'package:solder_history/data/model/solder_model.dart';
 import 'package:solder_history/helper/helper_method.dart';
 import 'package:solder_history/views/solder_history/widgets/solder_content_widget.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SolderScreen extends StatelessWidget {
   static const String id = "solderScreen";
@@ -40,8 +41,22 @@ class SolderScreen extends StatelessWidget {
     SolderModel solderModel = myCubit.solderData as SolderModel;
     return Scaffold(
       appBar: AppBar(
+        actions: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: IconButton(color: Colors.white,
+                onPressed: ()async{
+                final Uri launchUri = Uri(
+                  scheme: 'tel',
+                  path: solderModel.phoneNumber,
+                );
+                await launchUrl(launchUri);
+
+            }, icon: Icon(Icons.call)),
+          )
+        ],
         title: Text(
-          " ${solderModel.sId}سجل المجند ",
+          "مسلسل المجند ${solderModel.sId}",
           style: TextStyle(color: Colors.white),
         ),
         centerTitle: true,
@@ -75,8 +90,8 @@ class SolderScreen extends StatelessWidget {
                         style: TextStyle(fontSize: 18),
                       ),
                       Text(
-                        solderModel.isSent
-                            ? "تم تسليم السجل بتاريخ ${solderModel.sentDate!.year}-${solderModel.sentDate!.month}-${solderModel.sentDate!.day}"
+                        solderModel.isSent && solderModel.sentDate != null
+                            ? "تم تسليم السجل بتاريخ ${solderModel.sentDate?.year ?? 0}-${solderModel.sentDate?.month ?? 0}-${solderModel.sentDate?.day ?? 0}"
                             : "لم يتم تسليم السجل بعد",
                         style: TextStyle(fontSize: 18),
                       ),

@@ -31,7 +31,15 @@ void main() async {
   await Hive.initFlutter();
   await Hive.openBox("DataCompression");
   await Hive.openBox("device");
+  // print(getSentHive());
+  // print(getDataHive());
+  // print(getMainHive());
+  // print(getUpdateDataHive());
   // deviceBox.delete("auth");
+  box.delete("data");
+  box.delete("mainData");
+  box.delete("sentData");
+  box.delete("updateData");
   InFirebaseAccess().updateDevice();
   // print(getAuthDevice());
   runApp(MyApp());

@@ -12,12 +12,14 @@ Map defaultMap = {
 };
 
 Map getMainHive() => box.get("mainData", defaultValue: defaultMap);
-
+Map getSentHive() => box.get("sentData", defaultValue: defaultMap);
 Map getDataHive() => box.get("data", defaultValue: defaultMap);
+Map getUpdateDataHive() => box.get("updateData", defaultValue: defaultMap);
 
 Map? getDataNull() => box.get("data");
-
+Map? getSentNull() => box.get("sentData");
 Map? getMainNull() => box.get("mainData");
+Map? getUpdateDataNull() => box.get("updateData");
 
 Map getAuthDevice() => deviceBox.get("auth", defaultValue: {
       KeyManager.id: "",

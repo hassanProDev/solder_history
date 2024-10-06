@@ -93,13 +93,13 @@ class HistoryDetails extends StatelessWidget {
               ),
               HistoryDetailsWidget(
                 text:
-                    "عدد السجلات امي تخطت ال36 عام: ${allHistory.where((e) => e.educationalLevel == "امي" && calculateAge(e.dateOfBirth) >= 36).length}",
+                    "عدد السجلات امي تخطت ال36 عام: ${allHistory.where((e) => ( e.educationalLevel == "امي"|| e.educationalLevel == "أمي") && calculateAge(e.dateOfBirth) >= 36).length}",
                 onTap: () {
                   BlocProvider.of<DataCompressionCubit>(context)
                       .fetchSpecialSolders(DataCompressionModel(
                           listOfSolders: allHistory
                               .where((e) =>
-                                  e.educationalLevel == "امي" &&
+                          ( e.educationalLevel == "امي"|| e.educationalLevel == "أمي") &&
                                   calculateAge(e.dateOfBirth) >= 36)
                               .toList()));
                   Navigator.pushNamed(context, HistoryDetailsList.id,
@@ -166,13 +166,13 @@ class HistoryDetails extends StatelessWidget {
               ),
               HistoryDetailsWidget(
                 text:
-                    "عدد السجلات امي تحت ال36 عام: ${allHistory.where((e) => e.educationalLevel == "امي" && calculateAge(e.dateOfBirth) < 36).length}",
+                    "عدد السجلات امي تحت ال36 عام: ${allHistory.where((e) => ( e.educationalLevel == "امي"|| e.educationalLevel == "أمي") && calculateAge(e.dateOfBirth) < 36).length}",
                 onTap: () {
                   BlocProvider.of<DataCompressionCubit>(context)
                       .fetchSpecialSolders(DataCompressionModel(
                           listOfSolders: allHistory
                               .where((e) =>
-                                  e.educationalLevel == "امي" &&
+                          ( e.educationalLevel == "امي"|| e.educationalLevel == "أمي") &&
                                   calculateAge(e.dateOfBirth) < 36)
                               .toList()));
                   Navigator.pushNamed(context, HistoryDetailsList.id,
@@ -227,13 +227,13 @@ class HistoryDetails extends StatelessWidget {
               ),
               HistoryDetailsWidget(
                 text:
-                    "عدد السجلات امي لم تسرح دفعتة : ${allHistory.where((e) => e.educationalLevel == "امي" && calculateAgeDecimal(e.enlistmentDate) > 3.1).length}",
+                    "عدد السجلات امي لم تسرح دفعتة : ${allHistory.where((e) =>( e.educationalLevel == "امي"|| e.educationalLevel == "أمي") && calculateAgeDecimal(e.enlistmentDate) > 3.1).length}",
                 onTap: () {
                   BlocProvider.of<DataCompressionCubit>(context)
                       .fetchSpecialSolders(DataCompressionModel(
                           listOfSolders: allHistory
                               .where((e) =>
-                                  e.educationalLevel == "امي" &&
+                          ( e.educationalLevel == "امي"|| e.educationalLevel == "أمي") &&
                                   calculateAgeDecimal(e.enlistmentDate) > 3.1)
                               .toList()));
                   Navigator.pushNamed(context, HistoryDetailsList.id,
@@ -298,12 +298,12 @@ class HistoryDetails extends StatelessWidget {
               ),
               HistoryDetailsWidget(
                 text:
-                    "اجمالي السجلات امي : ${allHistory.where((e) => e.educationalLevel == "امي").length}",
+                    "اجمالي السجلات امي : ${allHistory.where((e) => ( e.educationalLevel == "امي"|| e.educationalLevel == "أمي")).length}",
                 onTap: () {
                   BlocProvider.of<DataCompressionCubit>(context)
                       .fetchSpecialSolders(DataCompressionModel(
                           listOfSolders: allHistory
-                              .where((e) => e.educationalLevel == "امي")
+                              .where((e) => ( e.educationalLevel == "امي"|| e.educationalLevel == "أمي"))
                               .toList()));
                   Navigator.pushNamed(context, HistoryDetailsList.id,
                       arguments: "امي");

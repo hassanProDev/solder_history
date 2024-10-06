@@ -1,18 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:solder_history/core/hive_helper.dart';
-import 'package:solder_history/core/widget/global_text_field.dart';
 import 'package:solder_history/cubit/data_compression_cubit.dart';
-import 'package:solder_history/data/model/data_compression_model.dart';
 import 'package:solder_history/data/model/solder_model.dart';
 import 'package:solder_history/views/solder_history/update_solder.dart';
 
-class SolderItem extends StatelessWidget {
+class SentSolderItem extends StatelessWidget {
   SolderModel solderModel;
   void Function()? onTap;
 
-  SolderItem({
+  SentSolderItem({
     super.key,
     required this.solderModel,
     this.onTap,
@@ -27,7 +24,7 @@ class SolderItem extends StatelessWidget {
       child: Slidable(
         endActionPane: ActionPane(motion: const ScrollMotion(), children: [
           SlidableAction(
-            backgroundColor: Colors.greenAccent,
+            backgroundColor: Colors.blueAccent,
             onPressed: (context) {
               showDialog(
                 context: context,
@@ -76,95 +73,6 @@ class SolderItem extends StatelessWidget {
               );
             },
             label: "تعديل البيانات",
-          ),
-          SlidableAction(
-            backgroundColor: Colors.blueAccent,
-            onPressed: (context) {
-              showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  final myCubit =
-                      BlocProvider.of<DataCompressionCubit>(context);
-                  // print(solderModel);
-
-                  return AlertDialog(
-                    scrollable: false,
-                    title: Text(
-                      'قيد التسليم',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(color: Colors.blueAccent),
-                    ),
-                    content: Form(
-                      key: myCubit.sentSolder.formKey,
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(solderModel.name),
-                          Text(solderModel.militaryId),
-                          SizedBox(
-                            height: 12,
-                          ),
-                          GlobalTextFormField(
-                            text: "المسلسل",
-                            controller: myCubit.sentSolder.sId,
-                            keyboardType: TextInputType.number,
-                          ),
-                          SizedBox(
-                            height: 12,
-                          ),
-                          GlobalTextFormField(
-                            text: "رقم الهاتف",
-                            controller: myCubit.sentSolder.phoneNumber,
-                            keyboardType: TextInputType.number,
-                          ),
-                        ],
-                      ),
-                    ),
-                    actions: <Widget>[
-                      TextButton(
-                        child: Text('اغلق'),
-                        onPressed: () {
-                          Navigator.pop(context); // Close the dialog
-                        },
-                      ),
-                      isConnected
-                          ? TextButton(
-                              style: TextButton.styleFrom(
-                                  backgroundColor: Colors.blueAccent),
-                              child: Text(
-                                'قيد التسليم',
-                                style: TextStyle(color: Colors.white),
-                              ),
-                              onPressed: () {
-                                if (myCubit.sentSolder.formKey.currentState!
-                                    .validate()) {
-                                  BlocProvider.of<DataCompressionCubit>(context)
-                                      .addSerial(solderModel);
-                                  Navigator.pop(context);
-                                }
-
-                                // showDatePicker(
-                                //   context: context,
-                                //   initialDate: DateTime.now(),
-                                //   firstDate: DateTime(1940),
-                                //   lastDate: DateTime.now().add(
-                                //     const Duration(days: 3 * 365),
-                                //   ),
-                                // ).then((value) {
-                                //   if (value == null) return;
-                                //   Navigator.pop(context); // Close the dialog
-                                //
-                                //   // ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                                // });
-                              },
-                            )
-                          : Text("لا يوجد انترنت"),
-                    ],
-                  );
-                },
-              );
-            },
-            label: "قيد التسليم",
           )
         ]),
         startActionPane: ActionPane(

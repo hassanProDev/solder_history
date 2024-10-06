@@ -13,6 +13,7 @@ import 'package:solder_history/data/model/data_compression_model.dart';
 import 'package:solder_history/data/model/device_access_model.dart';
 import 'package:solder_history/data/model/device_auth_model.dart';
 import 'package:solder_history/data/model/solder_model.dart';
+import 'package:solder_history/data/solder_details.dart';
 import 'package:solder_history/views/calc_military_service/calc_details.dart';
 import 'package:solder_history/views/calc_military_service/date_calc_model.dart';
 
@@ -34,15 +35,15 @@ class DataCompressionCubit extends Cubit<DataCompressionState> {
 
   void getDataComp() {
     emit(GetDataCompressionLoading());
-    try {
-      // dataManager().deleteData();
-      dataList = dataManager().getData();
+    // try {
+    // dataManager().deleteData();
+    dataList = dataManager().getData();
 
-      emit(GetDataCompressionSuccess(dataList));
-    } catch (e) {
-      emit(GetDataCompressionFailed(e.toString()));
-      throw e.toString();
-    }
+    emit(GetDataCompressionSuccess(dataList));
+    // } catch (e) {
+    //   emit(GetDataCompressionFailed(e.toString()));
+    //   throw e.toString();
+    // }
   }
 
   DataCompressionModel soldersData = DataCompressionModel();
@@ -92,10 +93,10 @@ class DataCompressionCubit extends Cubit<DataCompressionState> {
     }
   }
 
-  updateData() {
+  uploadData() {
     emit(UpdateDataCompressionLoading());
     try {
-      firebaseManager().updateData();
+      firebaseManager().uploadData();
       emit(UpdateDataCompressionSuccess());
     } on Exception catch (e) {
       emit(UpdateDataCompressionFailed());
@@ -115,7 +116,7 @@ class DataCompressionCubit extends Cubit<DataCompressionState> {
   deleteSolder(SolderModel solder) {
     emit(DeleteSolderLoading());
     try {
-      firebaseManager().deleteSolder(solder,isConnected);
+      firebaseManager().deleteSolder(solder, isConnected);
       emit(DeleteSolderSuccess());
     } on Exception catch (e) {
       emit(DeleteSolderFailed());
@@ -181,6 +182,82 @@ class DataCompressionCubit extends Cubit<DataCompressionState> {
         date1: calcDetails.absence.fromControllerToInt(),
         date2: calcDetails.serviceStart.fromControllerToInt());
     emit(Calculate());
+  }
+
+  SolderDetails sentSolder = SolderDetails();
+
+  addSerial(SolderModel solder) {
+    try {
+      emit(SentSolderLoading());
+      solder.sId = sentSolder.sId.text;
+      solder.phoneNumber = sentSolder.phoneNumber.text;
+      solder.isSent = true;
+      // print(solder);
+      dataRepo.addSerial(solder);
+      emit(SentSolderSuccess());
+    } on Exception catch (e) {
+      // print(e.toString() + " errorrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr");
+      emit(SentSolderFailed());
+    }
+    sentSolder.sId.clear();
+    sentSolder.phoneNumber.clear();
+  }
+
+  addSentSolder(SolderModel solder) {
+    try {
+      emit(SentSolderLoading());
+      if (sentSolder.sentDate.text == "") return;
+      solder.sentDate = DateTime(
+          DateTime.parse(sentSolder.sentDate.text).year,
+          DateTime.parse(sentSolder.sentDate.text).month,
+          DateTime.parse(sentSolder.sentDate.text).day);
+      // print(solder);
+      dataRepo.addSentSolder(solder);
+      emit(SentSolderSuccess());
+    } on Exception catch (e) {
+      // print(e.toString() + " errorrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr");
+      emit(SentSolderFailed());
+    }
+    sentSolder.sentDate.clear();
+  }
+
+  SolderDetails updatedSolder = SolderDetails();
+
+  updateData() {
+    emit(UpdateDataCompressionLoading());
+    try {
+      dataRepo.updateData(updatedSolder.solderModel());
+      emit(UpdateDataCompressionSuccess());
+    } on Exception catch (e) {
+      emit(UpdateDataCompressionFailed());
+    }
+  }
+  getDataForUpdate(){
+    SolderModel solder =solderData as SolderModel;
+    updatedSolder.sId.text= solder.sId;
+    updatedSolder.name.text= solder.name;
+    updatedSolder.sentDate.text= solder.sentDate.toString();
+    updatedSolder.isSent.text= solder.isSent.toString();
+    updatedSolder.phoneNumber.text= solder.phoneNumber??"";
+    updatedSolder.militaryId.text= solder.militaryId;
+    updatedSolder.serviceDuration.text= solder.serviceDuration.toString();
+    updatedSolder.address.text= solder.address;
+    updatedSolder.enlistmentDate.text= solder.enlistmentDate.toString();
+    updatedSolder.educationalLevel.text= solder.educationalLevel;
+    updatedSolder.dateOfBirth.text= solder.dateOfBirth.toString();
+    updatedSolder.governorate.text= solder.governorate;
+    updatedSolder.idNumber.text= solder.idNumber;
+    updatedSolder.center.text= solder.center;
+    updatedSolder.serviceEndDate.text= solder.serviceEndDate.toString();
+    updatedSolder.netServiceDuration.text= solder.netServiceDuration.toString();
+    updatedSolder.lostDuration.text= solder.lostDuration.toString();
+    updatedSolder.bloodType.text= solder.bloodType??'';
+    updatedSolder.religion.text= solder.religion??'';
+    updatedSolder.medicalLevel.text= solder.medicalLevel??'';
+    updatedSolder.weapon.text= solder.weapon;
+    updatedSolder.tripleNumber.text= solder.tripleNumber;
+    updatedSolder.forces.text= solder.forces;
+    updatedSolder.recruitmentArea.text= solder.recruitmentArea;
   }
 
   newCalc(CalcDetails calcDetails) {

@@ -5,8 +5,8 @@ class FirebaseCompManager{
   FirebaseCompRepo repo;
   FirebaseCompManager(this.repo);
 
-  void updateData(){
-    repo.updateData();
+  void uploadData(){
+    repo.uploadData();
   }
 
   void deleteSolder(SolderModel solder,bool isConnected){
@@ -15,4 +15,5 @@ class FirebaseCompManager{
   void refreshData(){
     repo.refreshData();
   }
+
 }

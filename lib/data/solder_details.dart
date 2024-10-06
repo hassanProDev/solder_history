@@ -3,6 +3,7 @@ import 'package:solder_history/data/model/solder_model.dart';
 
 class SolderDetails {
   final formKey = GlobalKey<FormState>();
+  TextEditingController sId = TextEditingController();
   TextEditingController name = TextEditingController();
   TextEditingController forces = TextEditingController();
   TextEditingController militaryId = TextEditingController();
@@ -30,6 +31,7 @@ class SolderDetails {
 
   SolderModel solderModel() {
     return SolderModel(
+      sId: sId.text,
       name: name.text,
       forces: forces.text,
       militaryId: militaryId.text,
@@ -81,8 +83,10 @@ class SolderDetails {
       religion: religion.text,
       service: service.text,
       serviceDuration: serviceDuration.text,
-      isSent: false,
-      sentDate: null,
+      isSent: isSent.text == "" ? false : bool.parse(isSent.text),
+      sentDate: sentDate.text == "null" || sentDate.text == ""
+          ? null
+          : DateTime.parse(sentDate.text),
     );
   }
 }

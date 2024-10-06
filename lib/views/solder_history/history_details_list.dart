@@ -8,7 +8,8 @@ import 'package:solder_history/views/solder_history/solder_screen.dart';
 import 'package:solder_history/views/solder_history/widgets/solder_item.dart';
 
 class HistoryDetailsList extends StatelessWidget {
-static const String id="historyDetailsList";
+  static const String id = "historyDetailsList";
+
   @override
   Widget build(BuildContext context) {
     final myCubit = BlocProvider.of<DataCompressionCubit>(context);
@@ -17,7 +18,8 @@ static const String id="historyDetailsList";
         // String title=ModalRoute.of(context)?.settings.arguments as String;
 
         myCubit.getDataComp();
-        List<SolderModel> listOfSolder = (myCubit.specialSoldersData.listOfSolders??[]).where((e) =>
+        List<SolderModel> listOfSolder = (myCubit.specialSoldersData
+            .listOfSolders ?? []).where((e) =>
         e.name.contains(myCubit.searchController.text) ||
             e.militaryId.contains(myCubit.searchController.text) ||
             e.center.contains(myCubit.searchController.text) ||
@@ -27,7 +29,7 @@ static const String id="historyDetailsList";
           appBar: AppBar(
             iconTheme: IconThemeData(color: Colors.white),
             backgroundColor: Colors.blueAccent,
-            title:  Text(
+            title: Text(
               "سجلات لمجندين ",
               style: TextStyle(color: Colors.white),
             ),
@@ -48,30 +50,30 @@ static const String id="historyDetailsList";
                   },
                   controller: myCubit.searchController,
                   text:
-                  "ابحث من خلال - (الاسم-رقم الشرطة-المركز-الرقم القومي)",
+                  "ابحث (الاسم-رقم الشرطة-المركز-الرقم القومي- العنوان)",
                 ),
                 SizedBox(
                   height: 12,
                 ),
                 Expanded(
-                  child:  ListView.builder(
-                      itemCount: listOfSolder.length,
-                      itemBuilder: (context, index) {
-                        return SolderItem(
-                          onTap: () {
-                            SolderModel data =listOfSolder[index]
-                            ;
-                            BlocProvider.of<DataCompressionCubit>(
-                                context)
-                                .fetchSolder(data);
-                            Navigator.pushNamed(
-                              context,
-                              SolderScreen.id,
-                            );
-                          },
-                          solderModel: listOfSolder[index],
-                        );
-                      })
+                    child: ListView.builder(
+                        itemCount: listOfSolder.length,
+                        itemBuilder: (context, index) {
+                          return SolderItem(
+                            onTap: () {
+                              SolderModel data = listOfSolder[index]
+                              ;
+                              BlocProvider.of<DataCompressionCubit>(
+                                  context)
+                                  .fetchSolder(data);
+                              Navigator.pushNamed(
+                                context,
+                                SolderScreen.id,
+                              );
+                            },
+                            solderModel: listOfSolder[index],
+                          );
+                        })
                 ),
               ],
             ),

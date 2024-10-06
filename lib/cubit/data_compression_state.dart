@@ -49,6 +49,12 @@ class RefreshDataCompressionFailed extends DataCompressionState {}
 
 class RefreshDataCompressionLoading extends DataCompressionState {}
 
+class SentSolderSuccess extends DataCompressionState {}
+
+class SentSolderFailed extends DataCompressionState {}
+
+class SentSolderLoading extends DataCompressionState {}
+
 class SearchDataCompression extends DataCompressionState {}
 class GetAccess extends DataCompressionState {}
 class InternetConnection extends DataCompressionState {}

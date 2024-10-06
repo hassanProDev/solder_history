@@ -31,17 +31,20 @@ class InFirebaseData extends FirebaseCompRepo {
     try {
       DataCompressionModel mainData =
           DataCompressionModel.fromJson(getMainHive());
-      DataCompressionModel data = DataCompressionModel.fromJson(getDataHive());
-      if ((mainData.listOfSolders ?? []).contains(solder) && isConnected) {
+      DataCompressionModel sentData =
+          DataCompressionModel.fromJson(getSentHive());
+      DataCompressionModel updateData =
+          DataCompressionModel.fromJson(getUpdateDataHive());
+      if (!((mainData.listOfSolders ?? []).contains(solder)) &&
+          !((sentData.listOfSolders ?? []).contains(solder)) &&
+          !((updateData.listOfSolders ?? []).contains(solder))) {
         final snap = await dataCompressionRef.get();
-
         if (snap.docs.isEmpty) return;
         DataCompressionModel fireData = snap.docs.first.data();
         // print("before ${fireData.listOfSolders ?? []}");
         (fireData.listOfSolders ?? [])
             .removeWhere((e) => e.militaryId == solder.militaryId);
         // print("after ${fireData.listOfSolders ?? []}");
-
         dataCompressionRef.doc(fireData.id).update(fireData.toJson());
         box.put("data", fireData.toJson());
       }
@@ -49,6 +52,16 @@ class InFirebaseData extends FirebaseCompRepo {
         (mainData.listOfSolders ?? [])
             .removeWhere((e) => e.militaryId == solder.militaryId);
         box.put("mainData", mainData.toJson());
+      }
+      if ((sentData.listOfSolders ?? []).contains(solder)) {
+        (sentData.listOfSolders ?? [])
+            .removeWhere((e) => e.militaryId == solder.militaryId);
+        box.put("sentData", sentData.toJson());
+      }
+      if ((updateData.listOfSolders ?? []).contains(solder)) {
+        (updateData.listOfSolders ?? [])
+            .removeWhere((e) => e.militaryId == solder.militaryId);
+        box.put("updateData", updateData.toJson());
       }
     } on Exception catch (e) {
       // print("delete solder : ${e.toString()}");
@@ -65,20 +78,47 @@ class InFirebaseData extends FirebaseCompRepo {
   }
 
   @override
-  void updateData() async {
+  void uploadData() async {
     DataCompressionModel data = DataCompressionModel.fromJson(getMainHive());
-    if (data.listOfSolders == []) return;
+    DataCompressionModel sentData =
+        DataCompressionModel.fromJson(getSentHive());
+    DataCompressionModel updateData =
+        DataCompressionModel.fromJson(getUpdateDataHive());
+
+    if (data.listOfSolders == [] &&
+        sentData.listOfSolders == [] &&
+        updateData.listOfSolders == []) return;
     final snap = await dataCompressionRef.get();
     if (snap.docs.isEmpty) {
+      for (var e in (sentData.listOfSolders ?? [])) {
+        (data.listOfSolders ?? []).add(e);
+      }
+      for (var e in (updateData.listOfSolders ?? [])) {
+        (data.listOfSolders ?? []).add(e);
+      }
       addData(data);
     } else {
       DataCompressionModel dataComp = snap.docs.first.data();
+      for (var e in (sentData.listOfSolders ?? [])) {
+        (dataComp.listOfSolders ?? []).remove(e);
+      }
+      for (var e in (updateData.listOfSolders ?? [])) {
+        (dataComp.listOfSolders ?? []).remove(e);
+      }
       for (var e in (data.listOfSolders ?? [])) {
+        (dataComp.listOfSolders ?? []).add(e);
+      }
+      for (var e in (sentData.listOfSolders ?? [])) {
+        (dataComp.listOfSolders ?? []).add(e);
+      }
+      for (var e in (updateData.listOfSolders ?? [])) {
         (dataComp.listOfSolders ?? []).add(e);
       }
       dataCompressionRef.doc(dataComp.id).update(dataComp.toJson());
     }
     await box.delete("mainData");
+    await box.delete("sentData");
+    await box.delete("updateData");
     final fireData = await dataCompressionRef.get();
     box.put("data", fireData.docs.first.data().toJson());
   }
@@ -86,6 +126,7 @@ class InFirebaseData extends FirebaseCompRepo {
   @override
   void refreshData() async {
     final data = await dataCompressionRef.get();
+    if (data.docs.isEmpty) return;
     box.put("data", data.docs.first.data().toJson());
   }
 
@@ -104,5 +145,10 @@ class InFirebaseData extends FirebaseCompRepo {
       (data.listOfSolders ?? [])[index] = solder;
       box.put("update", "value");
     }
+  }
+
+  @override
+  void updateData() {
+    // TODO: implement updateData
   }
 }

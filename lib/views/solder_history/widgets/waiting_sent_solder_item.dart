@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -8,11 +9,11 @@ import 'package:solder_history/data/model/data_compression_model.dart';
 import 'package:solder_history/data/model/solder_model.dart';
 import 'package:solder_history/views/solder_history/update_solder.dart';
 
-class SolderItem extends StatelessWidget {
+class WaitingSentSolderItem extends StatelessWidget {
   SolderModel solderModel;
   void Function()? onTap;
 
-  SolderItem({
+  WaitingSentSolderItem({
     super.key,
     required this.solderModel,
     this.onTap,
@@ -26,14 +27,13 @@ class SolderItem extends StatelessWidget {
       elevation: 5,
       child: Slidable(
         endActionPane: ActionPane(motion: const ScrollMotion(), children: [
-          SlidableAction(
-            backgroundColor: Colors.greenAccent,
-            onPressed: (context) {
+          SlidableAction(backgroundColor: Colors.greenAccent,
+            onPressed: (context){
               showDialog(
                 context: context,
                 builder: (BuildContext context) {
-                  BlocProvider.of<DataCompressionCubit>(context)
-                      .fetchSolder(solderModel);
+                  BlocProvider.of<DataCompressionCubit>(context).fetchSolder(solderModel);
+
 
                   return AlertDialog(
                     scrollable: false,
@@ -45,10 +45,9 @@ class SolderItem extends StatelessWidget {
                     content: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Text(solderModel.name),
-                        Text(solderModel.militaryId),
-                      ],
-                    ),
+                      Text(solderModel.name),
+                      Text(solderModel.militaryId),
+                    ],),
                     actions: <Widget>[
                       TextButton(
                         child: Text('اغلق'),
@@ -58,25 +57,23 @@ class SolderItem extends StatelessWidget {
                       ),
                       isConnected
                           ? TextButton(
-                              style: TextButton.styleFrom(
-                                  backgroundColor: Colors.blueAccent),
-                              child: Text(
-                                'تعديل',
-                                style: TextStyle(color: Colors.white),
-                              ),
-                              onPressed: () {
-                                Navigator.pop(context);
-                                Navigator.pushNamed(context, UpdateSolder.id);
-                              },
-                            )
+                        style: TextButton.styleFrom(
+                            backgroundColor: Colors.blueAccent),
+                        child: Text(
+                          'تعديل',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        onPressed: () {
+                          Navigator.pop(context);
+                          Navigator.pushNamed(context, UpdateSolder.id);
+                        },
+                      )
                           : Text("لا يوجد انترنت"),
                     ],
                   );
                 },
               );
-            },
-            label: "تعديل البيانات",
-          ),
+          },label: "تعديل البيانات",),
           SlidableAction(
             backgroundColor: Colors.blueAccent,
             onPressed: (context) {
@@ -84,7 +81,7 @@ class SolderItem extends StatelessWidget {
                 context: context,
                 builder: (BuildContext context) {
                   final myCubit =
-                      BlocProvider.of<DataCompressionCubit>(context);
+                  BlocProvider.of<DataCompressionCubit>(context);
                   // print(solderModel);
 
                   return AlertDialog(
@@ -104,19 +101,46 @@ class SolderItem extends StatelessWidget {
                           SizedBox(
                             height: 12,
                           ),
-                          GlobalTextFormField(
-                            text: "المسلسل",
-                            controller: myCubit.sentSolder.sId,
-                            keyboardType: TextInputType.number,
-                          ),
-                          SizedBox(
-                            height: 12,
-                          ),
-                          GlobalTextFormField(
-                            text: "رقم الهاتف",
-                            controller: myCubit.sentSolder.phoneNumber,
-                            keyboardType: TextInputType.number,
-                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              SizedBox(
+                                width: MediaQuery.of(context).size.width * .45,
+                                child: Column(
+                                  children: [
+                                    GlobalTextFormField(
+                                      keyboardType: TextInputType.text,
+                                      controller: myCubit.sentSolder.sentDate,
+                                      textInputAction: TextInputAction.next,
+                                      text: "تاريخ التسليم",
+                                      enabled: false,
+                                      // isPassword: true,
+                                      // iconData: Icons.calendar_month,
+                                    ),
+                                    FilledButton(
+                                      onPressed: () {
+                                        showDatePicker(
+                                          context: context,
+                                          initialDate: DateTime.now(),
+                                          firstDate: DateTime(1940),
+                                          lastDate: DateTime.now().add(
+                                            const Duration(days: 30),
+                                          ),
+                                        ).then((value) {
+                                          if (value == null) return;
+                                          myCubit.sentSolder.sentDate.text =
+                                              value.toString();
+                                          // groupFirebase.startDateText.text =
+                                          // "${value.day} - ${value.month} - ${value.year}";
+                                        });
+                                      },
+                                      child: Icon(Icons.calendar_month),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          )
                         ],
                       ),
                     ),
@@ -129,42 +153,42 @@ class SolderItem extends StatelessWidget {
                       ),
                       isConnected
                           ? TextButton(
-                              style: TextButton.styleFrom(
-                                  backgroundColor: Colors.blueAccent),
-                              child: Text(
-                                'قيد التسليم',
-                                style: TextStyle(color: Colors.white),
-                              ),
-                              onPressed: () {
-                                if (myCubit.sentSolder.formKey.currentState!
-                                    .validate()) {
-                                  BlocProvider.of<DataCompressionCubit>(context)
-                                      .addSerial(solderModel);
-                                  Navigator.pop(context);
-                                }
+                        style: TextButton.styleFrom(
+                            backgroundColor: Colors.blueAccent),
+                        child: Text(
+                          'تسليم',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        onPressed: () {
+                          if (myCubit.sentSolder.formKey.currentState!
+                              .validate()) {
+                            BlocProvider.of<DataCompressionCubit>(context)
+                                .addSentSolder(solderModel);
+                            Navigator.pop(context);
+                          }
 
-                                // showDatePicker(
-                                //   context: context,
-                                //   initialDate: DateTime.now(),
-                                //   firstDate: DateTime(1940),
-                                //   lastDate: DateTime.now().add(
-                                //     const Duration(days: 3 * 365),
-                                //   ),
-                                // ).then((value) {
-                                //   if (value == null) return;
-                                //   Navigator.pop(context); // Close the dialog
-                                //
-                                //   // ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                                // });
-                              },
-                            )
+                          // showDatePicker(
+                          //   context: context,
+                          //   initialDate: DateTime.now(),
+                          //   firstDate: DateTime(1940),
+                          //   lastDate: DateTime.now().add(
+                          //     const Duration(days: 3 * 365),
+                          //   ),
+                          // ).then((value) {
+                          //   if (value == null) return;
+                          //   Navigator.pop(context); // Close the dialog
+                          //
+                          //   // ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                          // });
+                        },
+                      )
                           : Text("لا يوجد انترنت"),
                     ],
                   );
                 },
               );
             },
-            label: "قيد التسليم",
+            label: "تسليم السجل",
           )
         ]),
         startActionPane: ActionPane(
@@ -198,7 +222,7 @@ class SolderItem extends StatelessWidget {
                         ),
                         TextButton(
                           style:
-                              TextButton.styleFrom(backgroundColor: Colors.red),
+                          TextButton.styleFrom(backgroundColor: Colors.red),
                           child: const Text(
                             'حذف',
                             style: TextStyle(color: Colors.white),
@@ -250,4 +274,5 @@ class SolderItem extends StatelessWidget {
       ),
     );
   }
+
 }

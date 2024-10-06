@@ -20,41 +20,116 @@ class InHiveData extends DataCompressionRepo {
   void deleteData() {
     box.delete("data");
     box.delete("mainData");
+    box.delete("sentData");
   }
 
-// print(
-  //     "main **** : ${DataCompressionModel.fromJson(Hive.box("DataCompression").get("mainData", defaultValue: {
-  //       KeyManager.id: "",
-  //       KeyManager.listOfSolders: "[]",
-  //     }))}");
-  // print(
-  //     "data **** : ${DataCompressionModel.fromJson(Hive.box("DataCompression").get("data", defaultValue:{
-  //       KeyManager.id: "",
-  //       KeyManager.listOfSolders: "[]",
-  //     }))}");
   @override
   DataCompressionModel getData() {
-    if (getDataNull == null) {
-      return DataCompressionModel.fromJson(getMainHive());
-    }
     DataCompressionModel data = DataCompressionModel.fromJson(getDataHive());
     for (var e
         in (DataCompressionModel.fromJson(getMainHive()).listOfSolders ?? [])) {
+      (data.listOfSolders ?? []).add(e);
+    }
+
+    for (var e
+        in (DataCompressionModel.fromJson(getSentHive()).listOfSolders ?? [])) {
+      (data.listOfSolders ?? []).add(e);
+    }
+    for (var e
+        in (DataCompressionModel.fromJson(getUpdateDataHive()).listOfSolders ??
+            [])) {
       (data.listOfSolders ?? []).add(e);
     }
     return data;
   }
 
   @override
-  void updateData(DataCompressionModel data) async {
-    await Hive.box("DataCompression").put("mainData", data);
-    final box = await Hive.box("DataCompression");
-    if (box.get("data") == null) {
-      // box.put("data", DataCompressionModel(listOfSolders: [data]).toJson());
-    } else {
-      final dataComp = DataCompressionModel.fromJson(box.get("data"));
-      // dataComp.listOfSolders?.add(data);
-      box.put("data", dataComp.toJson());
+  void updateData(SolderModel solder) async {
+    DataCompressionModel sentData =
+        DataCompressionModel.fromJson(getSentHive());
+    DataCompressionModel mainData =
+        DataCompressionModel.fromJson(getMainHive());
+    DataCompressionModel data = DataCompressionModel.fromJson(getDataHive());
+    DataCompressionModel updateData =
+        DataCompressionModel.fromJson(getUpdateDataHive());
+
+    if ((sentData.listOfSolders ?? []).contains(solder)) {
+      (sentData.listOfSolders ?? [])
+          .removeWhere((e) => e.militaryId == solder.militaryId);
+      box.put("sentData", sentData.toJson());
     }
+    if ((mainData.listOfSolders ?? []).contains(solder)) {
+      (mainData.listOfSolders ?? [])
+          .removeWhere((e) => e.militaryId == solder.militaryId);
+      box.put("mainData", mainData.toJson());
+    }
+    if ((data.listOfSolders ?? []).contains(solder)) {
+      (data.listOfSolders ?? [])
+          .removeWhere((e) => e.militaryId == solder.militaryId);
+      box.put("data", data.toJson());
+    }
+    if ((updateData.listOfSolders ?? []).contains(solder)) {
+      (updateData.listOfSolders ?? [])
+          .removeWhere((e) => e.militaryId == solder.militaryId);
+      box.put("updateData", updateData.toJson());
+    }
+    (updateData.listOfSolders ?? []).add(solder);
+    box.put("updateData", updateData.toJson());
+  }
+
+  @override
+  void addSerial(SolderModel solder) {
+    final data = DataCompressionModel.fromJson(getDataHive());
+    final mainData = DataCompressionModel.fromJson(getMainHive());
+    final sentData = DataCompressionModel.fromJson(getSentHive());
+    final updateData = DataCompressionModel.fromJson(getUpdateDataHive());
+
+    if ((data.listOfSolders ?? [])
+        .where((e) => e.militaryId == solder.militaryId)
+        .isNotEmpty) {
+      (sentData.listOfSolders ?? []).add(solder);
+      (data.listOfSolders ?? [])
+          .removeWhere((e) => e.militaryId == solder.militaryId);
+      box.put("data", data.toJson());
+    }
+
+    if ((mainData.listOfSolders ?? [])
+        .where((e) => e.militaryId == solder.militaryId)
+        .isNotEmpty) {
+      (sentData.listOfSolders ?? []).add(solder);
+      (mainData.listOfSolders ?? [])
+          .removeWhere((e) => e.militaryId == solder.militaryId);
+      box.put("mainData", mainData.toJson());
+    }
+    if ((updateData.listOfSolders ?? [])
+        .where((e) => e.militaryId == solder.militaryId)
+        .isNotEmpty) {
+      (sentData.listOfSolders ?? []).add(solder);
+      (updateData.listOfSolders ?? [])
+          .removeWhere((e) => e.militaryId == solder.militaryId);
+      box.put("updateData", updateData.toJson());
+    }
+    box.put("sentData", sentData.toJson());
+  }
+
+  void addSentSolder(SolderModel solder) {
+    final data = DataCompressionModel.fromJson(getDataHive());
+    final sentData = DataCompressionModel.fromJson(getSentHive());
+
+    if ((data.listOfSolders ?? [])
+        .contains(solder)) {
+      (sentData.listOfSolders ?? []).add(solder);
+      (data.listOfSolders ?? [])
+          .removeWhere((e) => e.militaryId == solder.militaryId);
+      box.put("data", data.toJson());
+    }
+
+    if ((sentData.listOfSolders ?? [])
+        .contains(solder)) {
+      (sentData.listOfSolders ?? [])
+          .removeWhere((e) => e.militaryId == solder.militaryId);
+      (sentData.listOfSolders ?? []).add(solder);
+    }
+    box.put("sentData", sentData.toJson());
   }
 }

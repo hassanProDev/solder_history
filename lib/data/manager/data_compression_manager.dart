@@ -24,11 +24,14 @@ class DataCompressionManager {
     repo.deleteData();
   }
 
-  void updateData(DataCompressionModel data) {
+  void updateData(SolderModel data) {
     repo.updateData(data);
   }
 
   DataCompressionModel getData() {
     return repo.getData();
+  }
+  void addSerial(SolderModel solder){
+    repo.addSerial(solder);
   }
 }
